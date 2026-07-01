@@ -14,9 +14,7 @@
     recipientName: 'Mawar',
     senderName: 'Elga',
 
-    // Halaman tujuan setelah "Opening Archive" selesai.
-    // Ganti / buat file archive.html di folder yang sama.
-    redirectUrl: '../end/archive.html',
+
 
     // 6 chapter untuk Gallery & Buku Hanami.
     // Isi "img" dengan path foto asli kalau ada, mis. "assets/img/chapter-1.jpg".
