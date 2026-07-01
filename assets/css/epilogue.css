@@ -1,0 +1,385 @@
+/* ==========================================================
+   HANAMI — EPILOGUE
+   Token system
+   ========================================================== */
+:root{
+  --paper:      #fffaf7;
+  --ink:        #4a2f3b;
+  --ink-soft:   #7a5568;
+  --rose:       #c97b9c;
+  --rose-deep:  #a85c81;
+  --rose-pale:  #ffd3e0;
+  --coral:      #ff9e83;
+  --gold:       #ffcf9e;
+  --dusk:       #8c7fb0;
+  --dusk-deep:  #5d5490;
+
+  --serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Noto Serif', 'PT Serif', serif;
+  --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --ease: cubic-bezier(.22,.7,.32,1);
+}
+
+/* ==========================================================
+   Reset dasar
+   ========================================================== */
+*, *::before, *::after{ box-sizing:border-box; }
+html, body{
+  height:100%;
+  margin:0;
+  overflow:hidden; /* tidak ada scroll, navigasi lewat tombol */
+  background:var(--paper);
+  -webkit-tap-highlight-color: transparent;
+}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+}
+button{
+  font-family:var(--sans);
+  border:none;
+  background:none;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+button:focus-visible{
+  outline:2px solid var(--ink);
+  outline-offset:3px;
+  border-radius:999px;
+}
+::selection{ background:var(--rose-pale); color:var(--ink); }
+
+/* ==========================================================
+   Panggung utama
+   ========================================================== */
+.stage{
+  position:relative;
+  width:100%;
+  height:100vh;
+  height:100dvh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  user-select:none;
+}
+
+.bg-layer{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  opacity:0;
+  transition:opacity .85s var(--ease);
+  background:var(--paper);
+}
+.bg-layer.visible{ opacity:1; }
+
+.glow-layer{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 50% 45%, rgba(255,255,255,.35), rgba(255,255,255,0) 70%);
+  animation:breathe 9s ease-in-out infinite;
+}
+@keyframes breathe{
+  0%,100%{ opacity:.55; transform:scale(1); }
+  50%{ opacity:.9; transform:scale(1.04); }
+}
+
+.particle-layer{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+/* ==========================================================
+   Background per-scene (gradasi murni, tanpa gambar/asset)
+   ========================================================== */
+.bg-1{ background:linear-gradient(180deg,#ffffff 0%,#fdf4f3 100%); }
+
+.bg-2{ background:linear-gradient(160deg,#fff0f4 0%,#ffd7e4 55%,#ffc2d7 100%); }
+
+.bg-3{ background:linear-gradient(160deg,#ffe2ec 0%,#ffc7dc 55%,#ffabc9 100%); position:relative; }
+.bg-3::before, .bg-3::after{
+  content:''; position:absolute; border-radius:50%; filter:blur(46px); opacity:.6;
+}
+.bg-3::before{ width:280px; height:280px; background:#fff3f7; top:-70px; right:-60px; }
+.bg-3::after{ width:230px; height:230px; background:#ffe8f0; bottom:-60px; left:-50px; }
+
+.bg-4{ background:linear-gradient(165deg,#ffe1ae 0%,#ffab86 55%,#f37a6c 100%); }
+
+.bg-5{ background:linear-gradient(165deg,#ffe7bb 0%,#ffcf9e 55%,#ffb491 100%); position:relative; }
+.bg-5::before{
+  content:''; position:absolute; width:340px; height:340px; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.55), rgba(255,255,255,0) 70%);
+  top:50%; left:50%; transform:translate(-50%,-55%); filter:blur(6px);
+}
+
+.bg-6{ background:linear-gradient(170deg,#cdbde6 0%,#9c8dc9 55%,#6a63a6 100%); }
+
+.bg-7{ background:linear-gradient(165deg,#ffcdb3 0%,#f79a9c 55%,#c67a9c 100%); }
+
+.bg-8{ background:linear-gradient(180deg,#ffffff 0%,#fff5f7 100%); }
+
+.bg-9{ background:#ffffff; }
+
+/* ==========================================================
+   Partikel: kelopak, bokeh, bintang
+   ========================================================== */
+.particle{ position:absolute; top:-6%; will-change:transform,opacity; }
+
+.particle.petal{
+  width:13px; height:13px;
+  background:linear-gradient(135deg,#ffe6f0,#ffb3cd);
+  border-radius:0 60% 60% 60%;
+  box-shadow:inset -2px -2px 5px rgba(190,100,135,.35);
+  animation:petal-fall linear forwards;
+  opacity:0;
+}
+@keyframes petal-fall{
+  0%{ transform:translate(0,0) rotate(0deg); opacity:0; }
+  10%{ opacity:.9; }
+  88%{ opacity:.8; }
+  100%{ transform:translate(var(--drift,40px), 118vh) rotate(320deg); opacity:0; }
+}
+
+.particle.bokeh{
+  width:var(--size,10px); height:var(--size,10px);
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,232,200,.95), rgba(255,232,200,0) 72%);
+  animation:bokeh-float linear forwards;
+  opacity:0;
+}
+@keyframes bokeh-float{
+  0%{ transform:translateY(0) translateX(0) scale(.6); opacity:0; }
+  18%{ opacity:.85; }
+  100%{ transform:translateY(-105vh) translateX(var(--drift,20px)) scale(1); opacity:0; }
+}
+
+.particle.star{
+  width:3px; height:3px; border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 6px 1px rgba(255,255,255,.75);
+  animation:star-twinkle ease-in-out infinite;
+}
+@keyframes star-twinkle{
+  0%,100%{ opacity:.12; }
+  50%{ opacity:1; }
+}
+
+/* ==========================================================
+   Garis progres (1 segmen = 1 scene, urutan bermakna)
+   ========================================================== */
+.progress-rail{
+  position:relative; z-index:5;
+  display:flex; gap:6px;
+  padding:calc(env(safe-area-inset-top,0px) + 16px) 16px 0;
+}
+.progress-rail .seg{
+  flex:1;
+  height:3px;
+  border-radius:3px;
+  background:rgba(74,47,59,.16);
+  overflow:hidden;
+}
+.progress-rail .seg::after{
+  content:'';
+  display:block;
+  height:100%;
+  width:0%;
+  background:var(--ink);
+  opacity:.55;
+  transition:width .5s var(--ease);
+}
+.progress-rail .seg.done::after{ width:100%; }
+.progress-rail .seg.current::after{ width:100%; opacity:.85; }
+
+/* ==========================================================
+   Tombol lewati
+   ========================================================== */
+.skip-btn{
+  position:absolute; z-index:6;
+  top:calc(env(safe-area-inset-top,0px) + 14px);
+  right:16px;
+  font-size:.72rem;
+  letter-spacing:.06em;
+  color:var(--ink);
+  opacity:.5;
+  padding:6px 10px;
+  border-radius:999px;
+}
+.skip-btn:hover{ opacity:.85; }
+
+/* ==========================================================
+   Konten scene: label, catatan, teks puitis
+   ========================================================== */
+.scene-frame{
+  position:relative; z-index:5;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:24px 22px;
+  text-align:center;
+  gap:18px;
+}
+
+.scene-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 16px;
+  border-radius:999px;
+  background:rgba(255,255,255,.6);
+  transition:opacity .5s ease;
+}
+.scene-tag.fade-hide{ opacity:0; }
+.scene-num{
+  font-family:var(--sans);
+  font-size:.68rem;
+  font-weight:700;
+  letter-spacing:.14em;
+  color:var(--rose-deep);
+}
+.scene-title{
+  font-family:var(--sans);
+  font-size:.68rem;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+
+.scene-note{
+  margin:0;
+  font-family:var(--sans);
+  font-style:italic;
+  font-size:.72rem;
+  letter-spacing:.02em;
+  color:var(--ink-soft);
+  opacity:.7;
+  max-width:340px;
+}
+
+.text-well{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.35em;
+  max-width:640px;
+  min-height:2em;
+}
+.line{
+  margin:0;
+  font-family:var(--serif);
+  font-size:clamp(1.05rem, 1.6vw + .8rem, 1.85rem);
+  line-height:1.6;
+  color:var(--ink);
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .8s var(--ease), transform .8s var(--ease);
+}
+.line.show{ opacity:1; transform:translateY(0); }
+.line.fade-out{ opacity:0; transform:translateY(-10px); }
+
+.line.signature{
+  font-style:italic;
+  font-size:clamp(.95rem, 1.2vw + .7rem, 1.3rem);
+  color:var(--ink-soft);
+}
+.line.signature.mark{
+  letter-spacing:.08em;
+  color:var(--rose-deep);
+}
+
+/* ==========================================================
+   Bar kontrol bawah
+   ========================================================== */
+.control-bar{
+  position:relative; z-index:5;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:16px 20px calc(env(safe-area-inset-bottom,0px) + 18px);
+  transition:opacity .5s ease;
+}
+.control-bar.fade-hide{ opacity:0; pointer-events:none; }
+
+.hint{
+  font-size:.72rem;
+  letter-spacing:.03em;
+  color:var(--ink-soft);
+  opacity:.65;
+}
+
+.next-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:12px 22px;
+  border-radius:999px;
+  background:linear-gradient(135deg, var(--rose), var(--rose-deep));
+  color:#fff;
+  font-size:.86rem;
+  font-weight:600;
+  letter-spacing:.03em;
+  box-shadow:0 8px 22px rgba(168,92,129,.35);
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.next-btn:active{ transform:scale(.94); }
+@media (hover:hover){
+  .next-btn:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(168,92,129,.45); }
+}
+.next-arrow{ display:inline-block; transition:transform .25s var(--ease); }
+.next-btn:active .next-arrow{ transform:translateX(3px); }
+
+/* ==========================================================
+   Tombol akhir menuju End Credits
+   ========================================================== */
+.final-btn{
+  margin-top:10px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 26px;
+  border-radius:999px;
+  background:rgba(74,47,59,.9);
+  color:#fff;
+  font-size:.86rem;
+  letter-spacing:.04em;
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity .9s var(--ease), transform .9s var(--ease);
+}
+.final-btn.show{ opacity:1; transform:translateY(0); }
+.final-btn:active{ transform:scale(.95); }
+
+
+   ========================================================== */
+@media (max-width:420px){
+  .scene-frame{ padding:18px 16px; gap:14px; }
+  .scene-note{ font-size:.68rem; }
+  .control-bar{ padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 14px); }
+  .next-btn{ padding:11px 18px; font-size:.82rem; }
+}
+
+@media (min-width:900px){
+  .scene-frame{ padding:40px; gap:22px; }
+  .text-well{ max-width:760px; }
+}
+
+/* ==========================================================
+   Hormati preferensi reduced motion & hemat baterai
+   ========================================================== */
+@media (prefers-reduced-motion: reduce){
+  .glow-layer{ animation:none; }
+  .particle{ display:none; }
+  .line, .bg-layer, .final-btn, .scene-tag, .control-bar{
+    transition-duration:.15s !important;
+  }
+}

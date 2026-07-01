@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0710">
+<meta name="description" content="Hanami — After Credits. Hadiah ulang tahun interaktif.">
+<title>Hanami — After Credits 🌸</title>
+
+<!-- Hanya 2 keluarga font, dibatasi ke weight yang dipakai saja supaya tetap ringan -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/css/aftercredits.css">
+</head>
+<body>
+
+<noscript>
+  <div class="noscript-block">Halaman ini butuh JavaScript untuk berjalan. Aktifkan JavaScript di browser kamu, ya. 🌸</div>
+</noscript>
+
+<!-- Confetti canvas dipakai ulang oleh semua scene, jadi cukup 1 elemen -->
+<canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+<!-- Tombol kontrol suara, mengambang di semua scene -->
+<button id="sound-toggle" class="floating-btn" type="button" aria-pressed="false" aria-label="Aktifkan suara">
+  <span class="icon-off">🔇</span><span class="icon-on">🔊</span>
+</button>
+
+<div id="app">
+
+  <!-- ============ START ============ -->
+  <section id="scene-start" class="scene is-active" data-scene="start">
+    <div class="petals" data-count="10"></div>
+    <div class="scene-inner center-col">
+      <p class="eyebrow">hanami · after credits</p>
+      <h1 class="title-script">Hanami</h1>
+      <p class="subtitle">sebuah cerita yang belum benar-benar selesai...</p>
+      <button id="btn-enter" class="btn btn-primary" type="button">Lanjutkan ke End Credits →</button>
+      <p class="tiny-note">🎧 gunakan headphone / suara aktif untuk pengalaman terbaik</p>
+    </div>
+  </section>
+
+  <!-- ============ OPENING ============ -->
+  <section id="scene-opening" class="scene" data-scene="opening">
+    <div class="scene-inner center-col">
+      <div class="loader-block">
+        <p id="opening-line" class="line-fade"></p>
+        <div id="opening-bar" class="progress-bar" hidden>
+          <div class="progress-bar__fill" id="opening-bar-fill"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 1 — THE TRUTH ============ -->
+  <section id="scene-truth" class="scene" data-scene="truth">
+    <div class="scene-inner center-col">
+      <p id="truth-line" class="line-fade truth-text"></p>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 2 — THE DOOR ============ -->
+  <section id="scene-door" class="scene" data-scene="door">
+    <div class="scene-inner center-col">
+      <div class="door-frame" id="door-frame">
+        <div class="door-glow"></div>
+        <div class="door" id="door-el">
+          <div class="door-panel"></div>
+          <div class="door-handle"></div>
+        </div>
+      </div>
+      <p class="hint-text" id="door-hint">Open it.</p>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 3 — BIRTHDAY SURPRISE ============ -->
+  <section id="scene-surprise" class="scene" data-scene="surprise">
+    <div class="petals" data-count="14"></div>
+    <div class="lights-row" aria-hidden="true"></div>
+    <div class="scene-inner center-col">
+      <h2 class="title-script" id="surprise-title">Happy Birthday, <span class="accent">Mawar</span> 🌸</h2>
+      <p id="surprise-line-1" class="reveal-line">Selamat datang.</p>
+      <p id="surprise-line-2" class="reveal-line">Masih ada beberapa hal yang ingin kulakukan bersamamu hari ini.</p>
+      <button id="btn-to-room" class="btn btn-primary reveal-line" type="button" hidden>Lanjutkan</button>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 4 — QUEST ROOM (HUB) ============ -->
+  <section id="scene-room" class="scene" data-scene="room">
+    <div class="petals" data-count="8"></div>
+
+    <aside class="quest-log" id="quest-log">
+      <button class="quest-log__toggle" id="quest-log-toggle" type="button" aria-expanded="false" aria-controls="quest-log-panel" aria-label="Lihat progress Birthday Quest">
+        <span class="quest-log__toggle-icon">🌸</span>
+        <span class="quest-log__toggle-count" id="quest-log-toggle-count">0/7</span>
+      </button>
+      <div class="quest-log__panel" id="quest-log-panel">
+        <p class="quest-log__title">🌸 Birthday Quest</p>
+        <ul class="quest-log__list">
+          <li data-quest="balon"><span class="box"></span><span class="label">Mainkan balon</span></li>
+          <li data-quest="jendela"><span class="box"></span><span class="label">Lihat jendela</span></li>
+          <li data-quest="gallery"><span class="box"></span><span class="label">Kunjungi galeri</span></li>
+          <li data-quest="buku"><span class="box"></span><span class="label">Buka Buku Hanami</span></li>
+          <li data-quest="lilin"><span class="box"></span><span class="label">Tiup lilin</span></li>
+          <li data-quest="hadiah"><span class="box"></span><span class="label">Buka hadiah</span></li>
+          <li data-quest="halaman"><span class="box"></span><span class="label">Tulis halaman terakhir</span></li>
+        </ul>
+        <p class="quest-log__progress">Progress <span id="quest-progress-text">0 / 7</span></p>
+      </div>
+    </aside>
+
+
+    <div class="scene-inner">
+      <p class="room-hint">Sentuh apa saja di ruangan ini. Bebas, tidak perlu urut.</p>
+      <div class="quest-board">
+        <button class="quest-card" data-open="balon" type="button">
+          <span class="quest-card__icon">🎈</span>
+          <span class="quest-card__label">Mainkan balon</span>
+          <span class="quest-card__done" aria-hidden="true">✔</span>
+        </button>
+        <button class="quest-card" data-open="jendela" type="button">
+          <span class="quest-card__icon">🪟</span>
+          <span class="quest-card__label">Lihat jendela</span>
+          <span class="quest-card__done" aria-hidden="true">✔</span>
+        </button>
+        <button class="quest-card" data-open="gallery" type="button">
+          <span class="quest-card__icon">🖼️</span>
+          <span class="quest-card__label">Kunjungi galeri</span>
+          <span class="quest-card__done" aria-hidden="true">✔</span>
+        </button>
+        <button class="quest-card" data-open="buku" type="button">
+          <span class="quest-card__icon">📖</span>
+          <span class="quest-card__label">Buku Hanami</span>
+          <span class="quest-card__done" aria-hidden="true">✔</span>
+        </button>
+        <button class="quest-card" data-open="lilin" type="button">
+          <span class="quest-card__icon">🎂</span>
+          <span class="quest-card__label">Tiup lilin</span>
+          <span class="quest-card__done" aria-hidden="true">✔</span>
+        </button>
+        <button class="quest-card" data-open="hadiah" type="button">
+          <span class="quest-card__icon">🎁</span>
+          <span class="quest-card__label">Buka hadiah</span>
+          <span class="quest-card__done" aria-hidden="true">✔</span>
+        </button>
+        <button class="quest-card" data-open="halaman" type="button">
+          <span class="quest-card__icon">✍️</span>
+          <span class="quest-card__label">Halaman terakhir</span>
+          <span class="quest-card__done" aria-hidden="true">✔</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 5 — QUEST COMPLETE ============ -->
+  <section id="scene-complete" class="scene" data-scene="complete">
+    <div class="petals" data-count="16"></div>
+    <div class="scene-inner center-col">
+      <ul class="quest-log__list quest-log__list--final" id="final-checklist">
+        <li>🌸 <span>Balon</span></li>
+        <li>🌸 <span>Jendela</span></li>
+        <li>🌸 <span>Gallery</span></li>
+        <li>🌸 <span>Buku Hanami</span></li>
+        <li>🌸 <span>Lilin</span></li>
+        <li>🌸 <span>Hadiah</span></li>
+        <li>🌸 <span>Halaman Terakhir</span></li>
+      </ul>
+      <p class="progress-100">100% Completed.</p>
+      <p id="complete-line" class="reveal-line"></p>
+      <button id="btn-to-memory" class="btn btn-primary reveal-line" type="button" hidden>Lanjutkan</button>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 6 — SAVE THIS MEMORY ============ -->
+  <section id="scene-memory" class="scene" data-scene="memory">
+    <div class="scene-inner center-col">
+      <p class="eyebrow" id="memory-date"></p>
+      <div class="memory-card">
+        <div class="memory-card__col">
+          <p class="memory-card__heading">Pesan Elga</p>
+          <p class="memory-card__text hand" id="memory-elga"></p>
+        </div>
+        <div class="memory-card__divider" aria-hidden="true"></div>
+        <div class="memory-card__col">
+          <p class="memory-card__heading">Pesan Mawar</p>
+          <p class="memory-card__text hand" id="memory-mawar"></p>
+        </div>
+      </div>
+      <div class="seal" aria-hidden="true">🌸</div>
+      <button id="btn-save-memory" class="btn btn-primary" type="button">📸 Save This Memory</button>
+      <button id="btn-to-close" class="btn btn-ghost" type="button">Lanjutkan →</button>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 7 — CLOSE HANAMI ============ -->
+  <section id="scene-close" class="scene" data-scene="close">
+    <div class="scene-inner center-col">
+      <div class="book-close" id="book-close">
+        <div class="book-close__page book-close__page--left"></div>
+        <div class="book-close__page book-close__page--right"></div>
+        <div class="book-close__spine">HANAMI</div>
+      </div>
+      <button id="btn-close-hanami" class="btn btn-primary" type="button">📖 Close Hanami</button>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 8 — GOODBYE ============ -->
+  <section id="scene-goodbye" class="scene scene--light" data-scene="goodbye">
+    <div class="scene-inner center-col">
+      <p id="goodbye-line" class="line-fade line-fade--dark"></p>
+    </div>
+  </section>
+
+  <!-- ============ SCENE 9 — OPENING ARCHIVE ============ -->
+  <section id="scene-archive" class="scene" data-scene="archive">
+    <div class="scene-inner center-col">
+      <p class="eyebrow">Opening Archive...</p>
+      <p class="blocks" id="archive-blocks"></p>
+      <div class="progress-bar"><div class="progress-bar__fill" id="archive-bar-fill"></div></div>
+      <p class="tiny-note" id="archive-percent">0%</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- ================= OVERLAYS (mini-quests) ================= -->
+
+<div class="overlay" id="overlay-balon" data-overlay="balon">
+  <button class="overlay-close" type="button" data-close>✕</button>
+  <div class="overlay-inner center-col">
+    <p class="overlay-hint">Sentuh balonnya.</p>
+    <button class="balloon" id="balloon-el" type="button" aria-label="Balon">
+      <span class="balloon__knot"></span>
+    </button>
+    <p class="overlay-msg" id="balloon-msg"></p>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-jendela" data-overlay="jendela">
+  <button class="overlay-close" type="button" data-close>✕</button>
+  <div class="overlay-inner window-scene">
+    <div class="window-frame">
+      <div class="window-sky" id="window-sky"></div>
+      <div class="window-cross"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-gallery" data-overlay="gallery">
+  <button class="overlay-close" type="button" data-close>✕</button>
+  <div class="overlay-inner center-col">
+    <p class="overlay-hint">Geser untuk melihat semua chapter.</p>
+    <div class="polaroid-row" id="polaroid-row"></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-buku" data-overlay="buku">
+  <button class="overlay-close" type="button" data-close>✕</button>
+  <div class="overlay-inner center-col">
+    <p class="overlay-hint">Hanya nostalgia, tidak perlu dibaca. 🌸</p>
+    <div class="book-cover" id="book-cover-view">
+      <span id="book-cover-label">Chapter I</span>
+    </div>
+    <div class="book-nav">
+      <button id="book-prev" class="btn btn-ghost" type="button" aria-label="Sebelumnya">←</button>
+      <span id="book-page-indicator" class="tiny-note">1 / 6</span>
+      <button id="book-next" class="btn btn-ghost" type="button" aria-label="Berikutnya">→</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-lilin" data-overlay="lilin">
+  <button class="overlay-close" type="button" data-close>✕</button>
+  <div class="overlay-inner center-col">
+    <p id="candle-line" class="reveal-line candle-line"></p>
+
+    <div class="cake" id="cake-el">
+      <div class="cake__tier cake__tier--bottom"></div>
+      <div class="cake__tier cake__tier--top"></div>
+      <div class="candle">
+        <div class="flame" id="flame-el"></div>
+        <div class="wick"></div>
+      </div>
+      <div class="smoke" id="smoke-el" hidden></div>
+    </div>
+
+    <div class="blow-controls" id="blow-controls" hidden>
+      <div class="mic-meter"><div class="mic-meter__fill" id="mic-meter-fill"></div></div>
+      <p class="tiny-note" id="mic-status">Meniup lewat mikrofon...</p>
+      <p class="tiny-note">atau</p>
+      <button id="blow-btn" class="btn btn-ghost" type="button">tekan &amp; tahan untuk meniup</button>
+    </div>
+
+    <div class="celebrate" id="candle-celebrate" hidden>
+      <p class="claps">👏 👏 👏 👏 👏</p>
+      <p class="reveal-line">🎵 Happy Birthday to You 🎵</p>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-hadiah" data-overlay="hadiah">
+  <button class="overlay-close" type="button" data-close>✕</button>
+  <div class="overlay-inner center-col">
+    <p class="overlay-hint" id="gift-hint">Yang ini... memang disiapkan khusus untukmu.</p>
+
+    <button class="gift-box" id="gift-box" type="button" aria-label="Buka hadiah">
+      <span class="gift-box__ribbon-v"></span>
+      <span class="gift-box__ribbon-h"></span>
+      <span class="gift-box__lid"></span>
+    </button>
+
+    <div class="letter" id="letter-el" hidden>
+      <div class="letter__paper hand" id="letter-text"></div>
+      <button id="letter-close" class="btn btn-primary" type="button">Selesai</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-halaman" data-overlay="halaman">
+  <button class="overlay-close" type="button" data-close>✕</button>
+  <div class="overlay-inner">
+    <div class="last-page">
+      <div class="last-page__col last-page__col--left">
+        <p class="last-page__title">Pesan Elga</p>
+        <p class="hand last-page__fixed" id="last-page-elga"></p>
+      </div>
+      <div class="last-page__col last-page__col--right">
+        <p class="last-page__title">This page belongs to you.</p>
+        <label class="field-label" for="mawar-name">Nama</label>
+        <input class="field-input hand" id="mawar-name" type="text" maxlength="40" placeholder="Tulis namamu...">
+        <label class="field-label" for="mawar-msg">Pesan</label>
+        <textarea class="field-input field-input--area hand" id="mawar-msg" maxlength="400" placeholder="Apa saja..."></textarea>
+        <button id="save-page-btn" class="btn btn-primary" type="button">Save My Page</button>
+        <p class="tiny-note" id="save-page-status" hidden>Memory Saved. 🌸</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-memory-note" data-overlay="memory-note">
+  <button class="overlay-close" type="button" data-close>✕</button>
+  <div class="overlay-inner center-col">
+    <p class="overlay-title">Screenshot halaman ini.</p>
+    <p class="overlay-body">Kalau berkenan... kirimkan kepadaku.<br>Aku ingin melihat halaman terakhir yang kita tulis bersama. 🌸</p>
+    <button class="btn btn-primary" data-close type="button">Tutup</button>
+  </div>
+</div>
+
+<script src="../assets/js/aftercredits.js"></script>
+</body>
+</html>

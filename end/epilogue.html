@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffd3e0">
+<title>Epilogue — Until We Meet Again</title>
+<link rel="stylesheet" href="../assets/css/epilogue.css">
+</head>
+<body>
+
+  <main class="stage" id="stage" aria-label="Epilogue Hanami">
+
+    <!-- Lapisan background gradasi, ganti-ganti tiap scene -->
+    <div class="bg-layer" id="bgLayer" aria-hidden="true"></div>
+
+    <!-- Cahaya lembut yang "bernapas" di belakang teks -->
+    <div class="glow-layer" aria-hidden="true"></div>
+
+    <!-- Tempat kelopak / bokeh / bintang muncul -->
+    <div class="particle-layer" id="particleLayer" aria-hidden="true"></div>
+
+    <!-- Garis progres, satu segmen = satu scene -->
+    <div class="progress-rail" id="progressRail" aria-hidden="true"></div>
+
+    <button class="skip-btn" id="skipBtn" type="button">Lewati</button>
+
+    <div class="scene-frame">
+      <div class="scene-tag" id="sceneTag">
+        <span class="scene-num" id="sceneNum">01</span>
+        <span class="scene-title" id="sceneTitleLabel">White Silence</span>
+      </div>
+      <p class="scene-note" id="sceneNote"></p>
+
+      <div class="text-well" id="textWell"></div>
+    </div>
+
+    <div class="control-bar" id="controlBar">
+      <span class="hint" id="hint">Ketuk layar untuk lanjut</span>
+      <button class="next-btn" id="nextBtn" type="button">
+        <span id="nextLabel">Lanjut</span>
+        <span class="next-arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+
+  </main>
+
+  <noscript>
+    Halaman ini butuh JavaScript untuk menampilkan epilogue-nya ya 🌸
+  </noscript>
+
+  <script src="../assets/js/epilogue.js" defer></script>
+</body>
+</html>

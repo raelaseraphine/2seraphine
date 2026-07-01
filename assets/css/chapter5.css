@@ -1,0 +1,756 @@
+/* =========================================================
+   CHAPTER V — "Things I Never Said"
+   Token system + responsive scrollytelling styles
+   Dioptimalkan biar ringan: animasi cuma transform/opacity,
+   blur dipakai seperlunya, content-visibility buat section
+   yang masih di luar layar.
+   ========================================================= */
+
+:root{
+  /* ---- color tokens ---- */
+  --bg-void:      #100c08;
+  --bg-panel:     #1a130e;
+  --bg-panel-2:   #221a13;
+  --paper:        #efe6d1;
+  --paper-soft:   #e4d8bd;
+  --ink:          #2c2117;
+  --ink-soft:     #5c4c37;
+  --text-cream:   #f1e8d4;
+  --text-muted:   #b3a288;
+  --gold:         #caa468;
+  --ember:        #e08a52;
+  --candle:       #ffb35e;
+  --closing-bg:   #f4eddd;
+  --closing-bg-2: #ece1ca;
+
+  /* ---- type ---- */
+  --f-script: 'Italianno', cursive;
+  --f-serif:  'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+
+  /* ---- timing ---- */
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --t-fast: .35s;
+  --t-med: .7s;
+  --t-slow: 1.1s;
+}
+
+/* ---------------------------------------------------------
+   Reset
+   --------------------------------------------------------- */
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+body{
+  margin: 0;
+  background: var(--bg-void);
+  color: var(--text-cream);
+  font-family: var(--f-serif);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1,h2,h3,p{ margin: 0; }
+button{ font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+a{ color: inherit; text-decoration: none; }
+img{ max-width: 100%; display: block; }
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------
+   Progress bar
+   --------------------------------------------------------- */
+.progress-track{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(255,255,255,.06);
+  z-index: 100;
+}
+.progress-fill{
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--ember), var(--gold));
+  transform-origin: left;
+}
+
+/* ---------------------------------------------------------
+   Scene shell
+   --------------------------------------------------------- */
+.scene{
+  position: relative;
+  min-height: 100svh;
+  padding: 6.5rem 1.5rem 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--bg-panel);
+  overflow: hidden;
+  /* render off-screen sections cheaply on low-end devices */
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
+}
+.scene--letters{ background: var(--bg-void); }
+.scene--admire{ background: var(--bg-panel-2); }
+.scene--confession{ background: var(--bg-void); }
+
+.scene-eyebrow{
+  position: absolute;
+  top: 2rem; left: 1.75rem;
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+  text-align: left;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.scene-eyebrow--dark{ color: var(--ink-soft); }
+.eyebrow-num{
+  font-size: .8rem;
+  color: var(--gold);
+  font-weight: 600;
+}
+.eyebrow-label{
+  font-size: .72rem;
+  color: var(--text-muted);
+}
+.scene--closing .eyebrow-label{ color: var(--ink-soft); }
+
+
+/* ---------------------------------------------------------
+   Reveal-on-scroll (IntersectionObserver toggles .is-in)
+   --------------------------------------------------------- */
+.reveal,
+.reveal-line{
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity var(--t-med) var(--ease), transform var(--t-med) var(--ease);
+  transition-delay: calc(var(--d, 0) * 110ms);
+}
+.reveal.is-in,
+.reveal-line.is-in{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.line-stack{
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  max-width: 30rem;
+  margin: 0 auto;
+}
+.reveal-line{
+  font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-cream);
+  line-height: 1.5;
+}
+.reveal-line--accent{
+  font-family: var(--f-script);
+  font-style: normal;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  color: var(--candle);
+  margin-top: .3rem;
+}
+
+/* ---------------------------------------------------------
+   Scene 01 — Opening
+   --------------------------------------------------------- */
+.scene--opening{
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 8%, rgba(202,164,104,.18), transparent 70%),
+    linear-gradient(180deg, #15100b 0%, #100c08 60%);
+  gap: 2.5rem;
+}
+.lamp-glow{
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  width: 70vw;
+  max-width: 620px;
+  height: 60vh;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(255,179,94,.16), transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+.opening-hero{ position: relative; z-index: 1; display: flex; flex-direction: column; gap: .65rem; }
+.chapter-tag{
+  font-size: .78rem;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.hero-title{
+  font-family: var(--f-script);
+  font-weight: 400;
+  font-size: clamp(3.2rem, 12vw, 6rem);
+  line-height: .95;
+  color: var(--text-cream);
+  text-shadow: 0 0 28px rgba(255,179,94,.18);
+}
+.hero-sub{
+  font-style: italic;
+  font-size: clamp(.95rem, 2.4vw, 1.15rem);
+  color: var(--text-muted);
+}
+.opening-lines{ position: relative; z-index: 1; margin-top: .5rem; }
+
+.petals{ position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.petal{
+  position: absolute;
+  top: -5%;
+  width: 7px; height: 9px;
+  border-radius: 60% 40% 60% 40%;
+  background: rgba(241,232,212,.35);
+  animation: petal-fall 14s linear infinite;
+}
+.petal:nth-child(1){ left: 8%;  animation-delay: 0s;   }
+.petal:nth-child(2){ left: 22%; animation-delay: -3s;  width:5px; height:7px; }
+.petal:nth-child(3){ left: 41%; animation-delay: -7s;  }
+.petal:nth-child(4){ left: 63%; animation-delay: -2s;  width:6px;height:8px;}
+.petal:nth-child(5){ left: 79%; animation-delay: -9s;  }
+.petal:nth-child(6){ left: 92%; animation-delay: -5s;  width:5px;height:7px;}
+@keyframes petal-fall{
+  0%   { transform: translateY(0) translateX(0) rotate(0deg);   opacity: 0; }
+  10%  { opacity: .8; }
+  90%  { opacity: .5; }
+  100% { transform: translateY(110vh) translateX(24px) rotate(220deg); opacity: 0; }
+}
+
+.scroll-cue{
+  position: absolute;
+  bottom: 2rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .25rem;
+  color: var(--text-muted);
+  z-index: 1;
+}
+.scroll-cue__arrow{
+  font-size: 1.3rem;
+  color: var(--gold);
+  animation: bob 2s ease-in-out infinite;
+}
+.scroll-cue__text{ font-size: .68rem; letter-spacing: .08em; }
+@keyframes bob{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(6px); }
+}
+
+/* ---------------------------------------------------------
+   Scene 02 — Empty Letters / Envelope field
+   --------------------------------------------------------- */
+.scene--letters{ gap: 2rem; }
+.envelope-field{
+  position: relative;
+  width: min(90vw, 360px);
+  height: 220px;
+  margin-top: 1rem;
+}
+.env{
+  position: absolute;
+  width: 92px; height: 62px;
+  border-radius: 4px;
+  background: linear-gradient(155deg, #3a2c1d, #271c12);
+  box-shadow: 0 8px 18px rgba(0,0,0,.45);
+  opacity: .65;
+}
+.env::after{
+  content:"";
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 49%, rgba(0,0,0,.35) 50%, transparent 51%),
+              linear-gradient(-135deg, transparent 49%, rgba(0,0,0,.35) 50%, transparent 51%);
+}
+.env--a{ top: 4%;  left: 4%;  transform: rotate(-9deg); }
+.env--b{ top: 2%;  right: 6%; transform: rotate(7deg); }
+.env--c{ bottom: 14%; left: 0%; transform: rotate(5deg); }
+.env--d{ bottom: 10%; right: 2%; transform: rotate(-6deg); }
+.env--e{ top: 38%; left: 30%; transform: rotate(2deg); opacity: .4; }
+
+.envelope-main{
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 152px; height: 102px;
+  display: block;
+}
+.envelope-main__body{
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, #4a3722, #2c2013);
+  border-radius: 5px;
+  box-shadow: 0 14px 30px rgba(0,0,0,.5);
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 10px;
+}
+.envelope-main__body::after{
+  content:"";
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 49%, rgba(0,0,0,.4) 50%, transparent 51%),
+              linear-gradient(-135deg, transparent 49%, rgba(0,0,0,.4) 50%, transparent 51%);
+  border-radius: 5px;
+}
+.envelope-main__label{
+  position: relative;
+  z-index: 1;
+  font-style: italic;
+  font-size: .85rem;
+  color: var(--paper-soft);
+  letter-spacing: .04em;
+}
+.envelope-main__flap{
+  position: absolute;
+  top: -2px; left: 0; right: 0;
+  height: 56px;
+  background: linear-gradient(160deg, #5a4329, #382814);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform var(--t-med) var(--ease);
+  box-shadow: 0 4px 10px rgba(0,0,0,.35);
+  z-index: 2;
+}
+.envelope-main__paper{
+  position: absolute;
+  top: -6px; left: 12px; right: 12px;
+  height: 70px;
+  background: var(--paper);
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 -2px 8px rgba(0,0,0,.2);
+  transform: translateY(8px);
+  opacity: 0;
+  transition: transform var(--t-med) var(--ease) .15s, opacity var(--t-med) var(--ease) .15s;
+  z-index: 1;
+}
+.envelope-main[aria-expanded="true"] .envelope-main__flap{
+  transform: rotateX(180deg);
+}
+.envelope-main[aria-expanded="true"] .envelope-main__paper{
+  transform: translateY(-26px);
+  opacity: 1;
+}
+.hint-text{
+  font-size: .75rem;
+  font-style: italic;
+  color: var(--text-muted);
+  letter-spacing: .03em;
+}
+
+/* ---------------------------------------------------------
+   Letter scenes (03 / 04 / 05) — paper card + accent visual
+   --------------------------------------------------------- */
+.scene--letter{ gap: 2rem; }
+.letter-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  max-width: 980px;
+  width: 100%;
+}
+.letter-grid--reverse .paper-card{ order: 1; }
+.letter-grid--reverse .phone-mock{ order: 0; }
+
+.paper-card{
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 3px;
+  padding: 2.4rem 1.9rem;
+  max-width: 26rem;
+  margin: 0 auto;
+  text-align: left;
+  box-shadow: 0 22px 40px rgba(0,0,0,.35);
+  clip-path: polygon(0 0, 100% 0, 100% 98%, 97% 100%, 3% 100%, 0 97%);
+}
+.paper-line{
+  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.paper-line + .paper-line{ margin-top: .9rem; }
+.paper-quote{
+  margin-top: 1.4rem;
+  font-family: var(--f-script);
+  font-size: clamp(1.9rem, 5vw, 2.4rem);
+  color: var(--ember);
+}
+
+.polaroid{
+  width: min(80vw, 220px);
+  margin: 0 auto;
+  background: var(--paper);
+  padding: 12px 12px 30px;
+  border-radius: 2px;
+  box-shadow: 0 18px 32px rgba(0,0,0,.4);
+  transform: rotate(3deg);
+}
+.polaroid__photo{
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 1px;
+  background: linear-gradient(180deg, #2a2a3d 0%, #6b4a52 35%, #d98a55 60%, #f3b774 80%, #2c2118 100%);
+}
+
+/* phone mock — scene 04 */
+.phone-mock{
+  width: min(78vw, 230px);
+  margin: 0 auto;
+  background: #0c0c0e;
+  border-radius: 26px;
+  padding: 10px;
+  box-shadow: 0 20px 36px rgba(0,0,0,.45);
+  border: 1px solid #2a2a2e;
+}
+.phone-mock__notch{
+  width: 50%;
+  height: 16px;
+  background: #0c0c0e;
+  border-radius: 0 0 12px 12px;
+  margin: 0 auto -16px;
+  position: relative;
+  z-index: 2;
+}
+.phone-mock__header{
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  background: #15151a;
+  border-radius: 16px 16px 0 0;
+  padding: 1.6rem .8rem .6rem;
+}
+.phone-mock__avatar{
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ember), var(--gold));
+  flex-shrink: 0;
+}
+.phone-mock__name{ font-size: .75rem; color: var(--text-cream); }
+.phone-mock__thread{
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  background: #0f0f12;
+  border-radius: 0 0 16px 16px;
+  padding: .8rem .6rem 1rem;
+  min-height: 200px;
+}
+.bubble{
+  font-size: .64rem;
+  line-height: 1.4;
+  padding: .4rem .6rem;
+  border-radius: 12px;
+  max-width: 80%;
+  font-style: normal;
+}
+.bubble--in{
+  align-self: flex-start;
+  background: #25252b;
+  color: var(--text-cream);
+  border-bottom-left-radius: 3px;
+}
+.bubble--out{
+  align-self: flex-end;
+  background: linear-gradient(135deg, #3a6b52, #2c5240);
+  color: #eafff2;
+  border-bottom-right-radius: 3px;
+}
+
+/* photo stack — scene 05 */
+.photo-stack{
+  position: relative;
+  width: min(80vw, 240px);
+  height: 230px;
+  margin: 0 auto;
+}
+.photo-stack__item{
+  position: absolute;
+  width: 130px;
+  aspect-ratio: 4/5;
+  background: var(--paper);
+  padding: 8px 8px 20px;
+  border-radius: 2px;
+  box-shadow: 0 14px 26px rgba(0,0,0,.4);
+}
+.photo-stack__item::before{
+  content:"";
+  position: absolute;
+  top: 8px; left: 8px; right: 8px; bottom: 20px;
+  border-radius: 1px;
+}
+.photo-stack__item--1{ top: 0; left: 0; transform: rotate(-8deg); }
+.photo-stack__item--1::before{ background: linear-gradient(160deg,#4a3a32,#caa37c); }
+.photo-stack__item--2{ top: 14px; right: 0; transform: rotate(6deg); }
+.photo-stack__item--2::before{ background: linear-gradient(160deg,#2e3a2e,#7c9c7a); }
+.photo-stack__item--3{ bottom: 0; left: 22%; transform: rotate(-2deg); z-index: 1; }
+.photo-stack__item--3::before{ background: linear-gradient(160deg,#3a2e3a,#9c7a96); }
+.photo-stack__caption{
+  position: absolute;
+  bottom: 4px; left: 0; right: 0;
+  text-align: center;
+  font-style: italic;
+  font-size: .6rem;
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------
+   Scene 06 — Things I Admire
+   --------------------------------------------------------- */
+.scene--admire{ gap: 2.2rem; }
+.admire-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  max-width: 900px;
+  width: 100%;
+}
+@media (min-width: 560px){
+  .admire-grid{ grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 880px){
+  .admire-grid{ grid-template-columns: repeat(6, 1fr); }
+}
+.admire-card{
+  background: linear-gradient(160deg, #2a2017, #1d1610);
+  border: 1px solid rgba(202,164,104,.18);
+  border-radius: 10px;
+  padding: 1.6rem .8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .6rem;
+}
+.admire-card__icon{ font-size: 1.6rem; }
+.admire-card__label{
+  font-size: .8rem;
+  font-style: italic;
+  color: var(--text-cream);
+  text-align: center;
+}
+.admire-caption{
+  font-size: .85rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------
+   Scene 07 — Confession
+   --------------------------------------------------------- */
+.scene--confession{
+  background:
+    radial-gradient(ellipse 50% 35% at 78% 70%, rgba(255,179,94,.1), transparent 70%),
+    var(--bg-void);
+}
+.confession-lines{ position: relative; z-index: 1; }
+.candle{
+  position: absolute;
+  right: 10%; bottom: 8%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 0;
+  opacity: .85;
+}
+.candle__flame{
+  width: 10px; height: 16px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(circle at 50% 30%, #fff3d6, var(--candle) 55%, transparent 80%);
+  animation: flicker 2.4s ease-in-out infinite;
+  filter: blur(.2px);
+}
+.candle__body{
+  width: 16px; height: 46px;
+  background: linear-gradient(180deg, #f1e3c4, #d8c79f);
+  border-radius: 2px;
+  margin-top: -2px;
+}
+@keyframes flicker{
+  0%,100%{ transform: scaleY(1) translateX(0); opacity: 1; }
+  25%{ transform: scaleY(1.08) translateX(.5px); opacity: .92; }
+  50%{ transform: scaleY(.95) translateX(-.5px); opacity: 1; }
+  75%{ transform: scaleY(1.05) translateX(.5px); opacity: .9; }
+}
+
+/* ---------------------------------------------------------
+   Scene 08 — Closing
+   --------------------------------------------------------- */
+.scene--closing{
+  background: linear-gradient(180deg, var(--closing-bg) 0%, var(--closing-bg-2) 100%);
+  color: var(--ink);
+  gap: 2.4rem;
+}
+.closing-lines .reveal-line{ color: var(--ink-soft); }
+.closing-cta{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .9rem;
+}
+.closing-cta__note{
+  font-size: .8rem;
+  letter-spacing: .08em;
+  color: var(--ink-soft);
+}
+.continue-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .95rem 1.9rem;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 999px;
+  font-style: italic;
+  font-size: 1rem;
+  letter-spacing: .02em;
+  box-shadow: 0 14px 28px rgba(44,33,23,.25);
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.continue-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 32px rgba(44,33,23,.32);
+}
+.continue-btn:active{ transform: translateY(0); }
+.continue-btn__arrow{ transition: transform var(--t-fast) var(--ease); }
+.continue-btn:hover .continue-btn__arrow{ transform: translateX(4px); }
+.continue-btn:focus-visible{
+  outline: 2px solid var(--ember);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------
+   Toast (feedback waktu tombol diklik tanpa link tujuan)
+   --------------------------------------------------------- */
+.toast{
+  position: fixed;
+  left: 50%; bottom: 1.5rem;
+  transform: translate(-50%, 12px);
+  background: var(--ink);
+  color: var(--paper);
+  padding: .7rem 1.2rem;
+  border-radius: 999px;
+  font-size: .82rem;
+  font-style: italic;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s var(--ease), transform .3s var(--ease);
+  z-index: 200;
+  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+}
+.toast.is-show{
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------------------------------------------------------
+   Larger screens — give the layout a bit more breathing room
+   --------------------------------------------------------- */
+@media (min-width: 760px){
+  .scene{ padding: 8rem 3rem 6rem; }
+  .letter-grid{ grid-template-columns: 1fr 1fr; text-align: left; }
+  .letter-grid .paper-card{ margin: 0; }
+  .letter-grid .polaroid,
+  .letter-grid .phone-mock,
+  .letter-grid .photo-stack{ margin: 0; justify-self: center; }
+}
+
+/* Focus visibility kept simple & visible everywhere */
+:focus-visible{
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Bottom navigation bar — Kembali / progress / Lanjut
+   ========================================================================== */
+:root{
+  --nav-h: 64px;
+}
+
+body{
+  /* kasih ruang di bawah biar konten gak ketutup nav bar */
+  padding-bottom: var(--nav-h);
+}
+
+.nav-bar{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: 0 1rem;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  background: rgba(16, 12, 8, .92);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(202,164,104,.25);
+  z-index: 100;
+}
+
+.nav-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .6rem 1.1rem;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--text-cream);
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: .8rem;
+  letter-spacing: .04em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease), transform .15s ease;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+.nav-btn:hover,
+.nav-btn:focus-visible{
+  background: var(--gold);
+  color: var(--bg-void);
+}
+.nav-btn:active{ transform: scale(.96); }
+.nav-btn:disabled{
+  opacity: .35;
+  cursor: default;
+  background: transparent;
+  color: var(--text-cream);
+}
+.nav-btn--next{
+  border-color: var(--ember);
+}
+.nav-btn--next:hover,
+.nav-btn--next:focus-visible{
+  background: var(--ember);
+  border-color: var(--ember);
+  color: var(--bg-void);
+}
+
+.nav-progress{
+  font-family: var(--f-serif);
+  font-size: .72rem;
+  letter-spacing: .12em;
+  color: var(--text-muted);
+  flex: 0 0 auto;
+}
+
+/* sesuaikan warna tombol saat berada di scene--closing (background terang) */
+.scene--closing ~ .nav-bar,
+body:has(#scene-08.in-closing-view) .nav-bar{
+  /* fallback: biarkan dark, sudah cukup kontras karena nav-bar fixed di bawah viewport */
+}

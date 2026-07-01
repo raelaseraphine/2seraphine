@@ -1,0 +1,615 @@
+/* ==========================================================================
+   HANAMI — Chapter VI: The Last Page
+   Design tokens
+   ========================================================================== */
+:root{
+  --cream:        #FAF5EF;
+  --cream-deep:    #F1E5D8;
+  --blush:         #F6DEDF;
+  --blush-deep:    #E9B7BD;
+  --ink:           #4A372E;
+  --ink-soft:      #8A776C;
+  --gold:          #BFA06B;
+  --white:         #FFFEFC;
+  --shadow:        rgba(74, 55, 46, 0.14);
+  --nav-h:         64px;
+
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-body:    'EB Garamond', Georgia, serif;
+  --font-label:   'Jost', 'Helvetica Neue', Arial, sans-serif;
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+html, body{
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* no page scrolling — navigation is button/keyboard/swipe driven */
+  overscroll-behavior: none;
+}
+
+body{
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg{ max-width: 100%; display:block; }
+
+/* ==========================================================================
+   Layout: slide deck — only the active scene is rendered/visible
+   ========================================================================== */
+.slides{
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.scene{
+  display: none;               /* inactive slides cost nothing to render */
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 4.5rem 1.5rem calc(var(--nav-h) + 2rem);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.scene.active{
+  display: flex;
+}
+
+.bg-cream{ background: var(--cream); }
+.bg-light{ background: var(--white); }
+.bg-blush{ background: linear-gradient(180deg, var(--cream) 0%, var(--blush) 100%); }
+.bg-white{ background: var(--white); }
+.bg-hush{ background: var(--white); }
+
+.bg-grove{
+  background:
+    radial-gradient(ellipse 60% 50% at 12% 20%, rgba(233,183,189,.45), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 88% 15%, rgba(233,183,189,.4), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 50% 100%, rgba(241,229,216,.8), transparent 70%),
+    var(--cream);
+}
+
+.scene-kicker{
+  position: absolute;
+  top: 1.5rem;
+  left: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 3;
+}
+.scene-kicker .num{
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--ink);
+  line-height: 1;
+}
+.scene-kicker .label{
+  font-family: var(--font-label);
+  font-size: .62rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: .3rem;
+}
+
+.scene-inner{
+  position: relative;
+  z-index: 2;
+  max-width: 620px;
+  width: 100%;
+  text-align: center;
+  max-height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 .25rem;
+}
+.scene-inner--wide{ max-width: 860px; }
+.scene-inner--left{ text-align: left; max-width: 480px; }
+
+.chapter-tag{
+  font-family: var(--font-label);
+  font-size: .68rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 2rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .8s var(--ease), transform .8s var(--ease);
+}
+.scene.in-view .chapter-tag{ opacity: 1; transform: translateY(0); }
+
+/* ==========================================================================
+   Poem lines — the reveal rhythm, now triggered on slide change
+   ========================================================================== */
+.line{
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.05rem, 1.1rem + 1.4vw, 1.7rem);
+  line-height: 1.7;
+  color: var(--ink);
+  margin: .7rem 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .85s var(--ease), transform .85s var(--ease);
+  transition-delay: calc(var(--i, 0) * .16s);
+}
+.scene.in-view .line{ opacity: 1; transform: translateY(0); }
+
+.line--quote{ font-style: italic; color: var(--ink-soft); }
+.line--italic{ font-style: italic; }
+.line--end{
+  font-size: clamp(1.2rem, 1.1rem + 1.8vw, 2rem);
+  letter-spacing: .04em;
+}
+.hint{
+  margin-top: 2.5rem;
+  font-family: var(--font-label);
+  font-size: .7rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.glyph{
+  display: block;
+  font-size: .8rem;
+  color: var(--gold);
+  margin: .3rem auto;
+  opacity: 0;
+  transition: opacity .8s var(--ease);
+  transition-delay: calc(var(--i, 0) * .16s);
+}
+.scene.in-view .glyph{ opacity: .8; }
+
+/* ==========================================================================
+   The Book
+   ========================================================================== */
+.book{
+  width: min(72vw, 280px);
+  aspect-ratio: 3 / 4.2;
+  margin: 0 auto;
+  background: linear-gradient(150deg, var(--cream) 0%, var(--cream-deep) 100%);
+  border: 1px solid rgba(191,160,107,.55);
+  border-radius: 4px;
+  box-shadow: 0 24px 50px -22px var(--shadow), inset 0 0 0 7px rgba(255,255,255,.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: 1.5rem;
+  position: relative;
+  opacity: 0;
+  transform: translateY(20px) scale(.97);
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
+}
+.scene.in-view .book{ opacity: 1; transform: translateY(0) scale(1); animation: float 7s ease-in-out infinite; }
+
+@keyframes float{
+  0%, 100%{ transform: translateY(0); }
+  50%{ transform: translateY(-8px); }
+}
+
+.book .title{
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.1rem + 2vw, 2rem);
+  letter-spacing: .1em;
+  color: var(--ink);
+}
+.book .for{
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--ink-soft);
+}
+.book .year{
+  font-family: var(--font-label);
+  font-size: .68rem;
+  letter-spacing: .25em;
+  color: var(--gold);
+  margin-top: .3rem;
+}
+.book-corner{
+  position: absolute;
+  color: var(--gold);
+  font-size: .9rem;
+  opacity: .7;
+}
+.book-corner--tl{ top: .8rem; left: .9rem; }
+.book-corner--br{ bottom: .8rem; right: .9rem; }
+
+.book--closing{ animation: none; }
+
+/* ==========================================================================
+   Memories — chapter strip
+   ========================================================================== */
+.chapters{
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: .5rem .5rem 1.5rem;
+  margin: 0 -.5rem 1rem;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+.chapters::-webkit-scrollbar{ height: 4px; }
+.chapters::-webkit-scrollbar-thumb{ background: var(--blush-deep); border-radius: 4px; }
+
+.chapter-card{
+  scroll-snap-align: center;
+  flex: 0 0 auto;
+  width: 150px;
+  aspect-ratio: 3 / 4;
+  background: linear-gradient(160deg, var(--white) 0%, var(--cream-deep) 100%);
+  border-radius: 6px;
+  box-shadow: 0 14px 28px -18px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  padding: 1rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+  transition-delay: calc(var(--i, 0) * .12s);
+}
+.scene.in-view .chapter-card{ opacity: 1; transform: translateY(0); }
+
+.chapter-card .roman{
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--gold);
+}
+.chapter-card .chapter-title{
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: .85rem;
+  color: var(--ink-soft);
+}
+
+.caption{
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: .9rem;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-top: .5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .8s var(--ease), transform .8s var(--ease);
+  transition-delay: .9s;
+}
+.scene.in-view .caption{ opacity: 1; transform: translateY(0); }
+
+/* ==========================================================================
+   Reflection — open book
+   ========================================================================== */
+.open-book{
+  display: flex;
+  background: var(--white);
+  border-radius: 4px;
+  box-shadow: 0 20px 44px -22px var(--shadow);
+  overflow: hidden;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.page{
+  flex: 1 1 0;
+  padding: 2.2rem 1.6rem;
+  position: relative;
+  text-align: left;
+}
+.page--left{
+  background: linear-gradient(160deg, var(--cream) 0%, var(--white) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(74,55,46,.1);
+  gap: 1rem;
+}
+.page--left .pen{ font-size: 1.8rem; opacity: .8; }
+.page--left .page-flower{ font-size: 1.2rem; color: var(--gold); opacity: .6; }
+.page--right .line{ text-align: left; font-size: clamp(.95rem, .9rem + 1vw, 1.3rem); }
+
+@media (max-width: 680px){
+  .open-book{ flex-direction: column; max-width: 380px; }
+  .page--left{ border-right: none; border-bottom: 1px solid rgba(74,55,46,.1); padding: 1.2rem; flex-direction: row; justify-content: center; }
+  .page--right{ padding: 1.4rem 1.4rem; }
+  .page--right .line{ text-align: center; }
+}
+
+/* ==========================================================================
+   The Little Things — polaroids
+   ========================================================================== */
+.polaroids{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .8rem 1rem;
+  margin-bottom: 1rem;
+}
+.polaroid{
+  width: 104px;
+  background: var(--white);
+  padding: .5rem .5rem 1.2rem;
+  box-shadow: 0 12px 24px -16px var(--shadow);
+  opacity: 0;
+  transform: translateY(18px) rotate(var(--rot, 0deg));
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+  transition-delay: calc(var(--i, 0) * .1s);
+}
+.scene.in-view .polaroid{ opacity: 1; transform: translateY(0) rotate(var(--rot, 0deg)); }
+
+.polaroid:nth-child(odd){ --rot: -3deg; }
+.polaroid:nth-child(even){ --rot: 2.5deg; }
+
+.polaroid .emoji{
+  display: block;
+  text-align: center;
+  font-size: 1.8rem;
+  background: linear-gradient(160deg, var(--blush) 0%, var(--cream) 100%);
+  border-radius: 2px;
+  padding: 1rem 0;
+}
+.polaroid .caption-small{
+  display: block;
+  text-align: center;
+  margin-top: .45rem;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: .75rem;
+  color: var(--ink-soft);
+}
+.polaroid--note{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 1.2rem .5rem;
+}
+.note-text{
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: .8rem;
+  color: var(--ink-soft);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Final Letter
+   ========================================================================== */
+.letter{
+  max-width: 540px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%);
+  border-radius: 3px;
+  padding: 2rem 1.7rem;
+  box-shadow: 0 26px 56px -24px var(--shadow);
+  position: relative;
+  text-align: left;
+  transform: rotate(-0.5deg);
+  opacity: 0;
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
+}
+.scene.in-view .letter{ opacity: 1; }
+
+.letter .tape{
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 64px;
+  height: 22px;
+  background: rgba(233, 183, 189, .55);
+}
+
+.letter-line{
+  font-family: var(--font-body);
+  font-style: italic;
+  line-height: 1.75;
+  color: var(--ink);
+  font-size: clamp(.86rem, .84rem + .5vw, 1rem);
+  margin: 0 0 .85rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .8s var(--ease), transform .8s var(--ease);
+}
+.letter-line:nth-child(2){ transition-delay: .25s; }
+.letter-line:nth-child(3){ transition-delay: .5s; }
+.letter-line:nth-child(4){ transition-delay: .75s; }
+.letter-line:nth-child(5){ transition-delay: 1s; }
+.scene.in-view .letter-line{ opacity: 1; transform: translateY(0); }
+
+/* ==========================================================================
+   The Last Flower
+   ========================================================================== */
+.single-petal{
+  width: 24px;
+  height: 32px;
+  margin: 0 auto 2rem;
+  background: linear-gradient(150deg, var(--blush-deep), var(--blush));
+  border-radius: 0 80% 0 80%;
+  opacity: 0;
+  animation: petal-drift 6s ease-in-out infinite;
+}
+.scene.in-view .single-petal{ opacity: .9; }
+
+@keyframes petal-drift{
+  0%{ transform: translateY(-6px) rotate(-8deg); }
+  50%{ transform: translateY(8px) rotate(10deg); }
+  100%{ transform: translateY(-6px) rotate(-8deg); }
+}
+
+/* ==========================================================================
+   Fade to White — in-scene epilogue button
+   ========================================================================== */
+.btn-epilogue{
+  margin-top: 2.5rem;
+  padding: .95rem 2.3rem;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-label);
+  font-size: .76rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 1s var(--ease), transform 1s var(--ease), background .3s ease, color .3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-epilogue.show{ opacity: 1; transform: translateY(0); }
+.btn-epilogue:hover,
+.btn-epilogue:focus-visible{
+  background: var(--gold);
+  color: var(--white);
+}
+.btn-epilogue:focus-visible{ outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* ==========================================================================
+   Bottom navigation bar — Kembali / progress / Lanjut
+   ========================================================================== */
+.nav-bar{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: 0 1rem;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  background: rgba(250, 245, 239, .92);
+  border-top: 1px solid rgba(191,160,107,.3);
+  z-index: 10;
+}
+
+.nav-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .6rem 1.1rem;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-label);
+  font-size: .74rem;
+  letter-spacing: .08em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .25s ease, color .25s ease, opacity .25s ease, transform .15s ease;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+.nav-btn:hover,
+.nav-btn:focus-visible{
+  background: var(--gold);
+  color: var(--white);
+}
+.nav-btn:active{ transform: scale(.96); }
+.nav-btn:disabled{
+  opacity: .35;
+  cursor: default;
+  background: transparent;
+  color: var(--ink);
+}
+.nav-btn--next{
+  border-color: var(--ink);
+}
+.nav-btn--next:hover,
+.nav-btn--next:focus-visible{
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.nav-btn.is-hidden{ visibility: hidden; pointer-events: none; }
+
+.nav-progress{
+  font-family: var(--font-label);
+  font-size: .68rem;
+  letter-spacing: .14em;
+  color: var(--ink-soft);
+  flex: 0 0 auto;
+}
+
+/* ==========================================================================
+   Ambient sakura petals (shared, fixed layer — cheap: one set of elements
+   for the whole page, animated purely with CSS transforms)
+   ========================================================================== */
+.petals-global{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+  transition: opacity 1.2s ease;
+}
+.petals-global.hush{ opacity: .12; }
+
+.petal{
+  position: absolute;
+  top: -8%;
+  left: var(--x, 50%);
+  width: var(--size, 10px);
+  height: calc(var(--size, 10px) * 1.3);
+  background: linear-gradient(150deg, var(--blush-deep), var(--blush));
+  border-radius: 0 80% 0 80%;
+  opacity: 0;
+  animation: petal-fall var(--dur, 14s) linear var(--delay, 0s) infinite;
+  will-change: transform;
+}
+
+@keyframes petal-fall{
+  0%{   transform: translate3d(0, -10vh, 0) rotate(0deg);   opacity: 0; }
+  8%{   opacity: .85; }
+  90%{  opacity: .85; }
+  100%{ transform: translate3d(var(--drift, 60px), 112vh, 0) rotate(340deg); opacity: 0; }
+}
+
+/* ==========================================================================
+   Responsive tuning
+   ========================================================================== */
+@media (max-width: 640px){
+  .scene{ padding: 4rem 1.25rem calc(var(--nav-h) + 1.5rem); }
+  .scene-kicker{ top: 1.1rem; left: 1.25rem; }
+  .polaroid{ width: 88px; }
+  .chapter-card{ width: 128px; }
+  .letter{ padding: 1.7rem 1.3rem; }
+  .nav-btn{ padding: .55rem .9rem; font-size: .7rem; }
+  .nav-btn--prev span:not([aria-hidden]),
+  .nav-btn--prev{ }
+}
+
+@media (max-height: 560px){
+  .scene{ padding-top: 3.2rem; }
+  .book{ width: min(50vw, 200px); }
+}
+
+/* ==========================================================================
+   Respect reduced motion & keep things light on low-end devices
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .2s !important;
+  }
+  .petals-global{ display: none; }
+}

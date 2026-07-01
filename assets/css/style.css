@@ -1,0 +1,654 @@
+/* ==========================================================
+   HANAMI PROJECT — REDESIGN
+   "Sebuah Surat"
+   Part 1 — Foundation
+========================================================== */
+
+:root{
+
+    --ivory:#FFF8F3;
+    --paper:#FFFDF9;
+    --blush:#F5DFDB;
+
+    --ink:#3E2E2A;
+    --mauve:#9C8079;
+
+    --rosewood:#8C4A4E;
+    --rosewood-deep:#6E3539;
+    --gold:#C9A368;
+
+    --shadow:
+        0 30px 70px rgba(90,45,45,.10);
+
+    --radius:20px;
+
+}
+
+/* ==========================================================
+   RESET
+========================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    font-size:16px;
+    scroll-behavior:smooth;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+    overflow-x:hidden; /* belt-and-suspenders: some Android browsers ignore overflow-x on body alone */
+}
+
+body{
+    position:relative;
+    overflow-x:hidden;
+    font-family:"Inter",sans-serif;
+    font-weight:300;
+    color:var(--ink);
+    background:var(--ivory);
+}
+
+em{
+    font-style:italic;
+    color:var(--rosewood);
+}
+
+/* ==========================================================
+   GLOBAL
+========================================================== */
+
+.hidden{
+    display:none !important;
+}
+
+.hero{
+    position:relative;
+    width:100%;
+    min-height:100vh; /* fallback for old browsers */
+    min-height:100dvh; /* real visible viewport on mobile, ignores address-bar show/hide jumps */
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:48px 24px;
+    padding-top:max(48px,env(safe-area-inset-top));
+    padding-bottom:max(48px,env(safe-area-inset-bottom));
+    padding-left:max(24px,env(safe-area-inset-left));
+    padding-right:max(24px,env(safe-area-inset-right));
+}
+
+/* ==========================================================
+   BACKGROUND — single ambient wash, no scattered glyphs
+========================================================== */
+
+.bg-decoration{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:-5;
+}
+
+.bg-decoration::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(
+            circle at 20% 15%,
+            rgba(255,255,255,.9),
+            transparent 45%
+        ),
+        radial-gradient(
+            circle at 85% 90%,
+            var(--blush),
+            transparent 55%
+        ),
+        var(--ivory);
+    animation:washMove 22s ease-in-out infinite;
+}
+
+@keyframes washMove{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.03); }
+}
+
+/* film grain */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+        radial-gradient(
+            rgba(255,255,255,.08) 1px,
+            transparent 1px
+        );
+    background-size:18px 18px;
+    opacity:.3;
+    pointer-events:none;
+    z-index:-4;
+}
+
+/* vignette */
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(
+            circle,
+            transparent 60%,
+            rgba(60,30,30,.05)
+        );
+    pointer-events:none;
+    z-index:-3;
+}
+
+/* ==========================================================
+   SIGNATURE MOTIF — wax seal
+========================================================== */
+
+.seal{
+    --seal-size:56px;
+    width:var(--seal-size);
+    height:var(--seal-size);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:"Fraunces",serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:calc(var(--seal-size) * .42);
+    color:#FBEDE8;
+    background:
+        radial-gradient(
+            circle at 32% 28%,
+            #B5615F,
+            var(--rosewood) 55%,
+            var(--rosewood-deep) 100%
+        );
+    box-shadow:
+        inset 0 -4px 8px rgba(0,0,0,.25),
+        inset 0 3px 6px rgba(255,255,255,.22),
+        0 10px 22px rgba(108,53,57,.35);
+    flex-shrink:0;
+}
+
+.seal--card{
+    --seal-size:78px;
+    position:absolute;
+    top:-39px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:2;
+}
+
+.seal--card::after{
+    content:"";
+    position:absolute;
+    bottom:-13px;
+    left:50%;
+    width:1px;
+    height:13px;
+    background:var(--gold);
+    transform:translateX(-50%);
+}
+
+/* ==========================================================
+   Part 2 — Intro
+========================================================== */
+
+.intro{
+    width:min(620px,92%);
+    text-align:center;
+}
+
+.reveal{
+    opacity:0;
+    animation:
+        itemReveal .8s
+        cubic-bezier(.22,.8,.22,1)
+        forwards;
+}
+
+.delay-1{ animation-delay:.05s; }
+.delay-2{ animation-delay:.18s; }
+.delay-3{ animation-delay:.32s; }
+.delay-4{ animation-delay:.46s; }
+
+@keyframes itemReveal{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+        filter:blur(6px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+        filter:blur(0);
+    }
+}
+
+.eyebrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:30px;
+    font-size:.78rem;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    color:var(--mauve);
+}
+
+.eyebrow::before,
+.eyebrow::after{
+    content:"";
+    width:34px;
+    height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold));
+}
+
+.eyebrow::after{
+    background:linear-gradient(90deg,var(--gold),transparent);
+}
+
+.intro h1{
+    font-family:"Fraunces",serif;
+    font-optical-sizing:auto;
+    font-size:clamp(2.8rem,6.5vw,4.8rem);
+    font-weight:560;
+    line-height:1.12;
+    color:var(--ink);
+    margin-bottom:22px;
+}
+
+.intro p{
+    max-width:480px;
+    margin:0 auto;
+    font-size:1.02rem;
+    line-height:1.95;
+    color:var(--mauve);
+}
+
+/* ==========================================================
+   Seal button (open letter / submit)
+========================================================== */
+
+.seal-button{
+    margin-top:44px;
+    border:none;
+    background:none;
+    cursor:pointer;
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    transition:transform .35s;
+}
+
+.seal-button .seal{
+    margin-bottom:-18px;
+    z-index:2;
+    transition:transform .35s;
+}
+
+.seal-button .seal-label{
+    padding:16px 40px 13px;
+    border-radius:999px;
+    background:linear-gradient(180deg,var(--rosewood),var(--rosewood-deep));
+    color:#FBEDE8;
+    font-family:"Inter",sans-serif;
+    font-size:.98rem;
+    letter-spacing:.3px;
+    box-shadow:0 14px 30px rgba(108,53,57,.25);
+    transition:box-shadow .35s,transform .35s;
+}
+
+.seal-button:hover .seal-label{
+    transform:translateY(-3px);
+    box-shadow:0 20px 40px rgba(108,53,57,.32);
+}
+
+.seal-button:hover .seal{
+    transform:rotate(-6deg);
+}
+
+.seal-button:active .seal-label{
+    transform:scale(.98);
+}
+
+/* crack the seal on submit (triggered when JS adds .fade-out to #intro) */
+
+.fade-out .seal{
+    animation:sealCrack .5s ease forwards;
+}
+
+@keyframes sealCrack{
+    0%{ transform:rotate(0) scale(1); opacity:1; }
+    60%{ transform:rotate(14deg) scale(1.12); opacity:1; }
+    100%{ transform:rotate(18deg) scale(.7); opacity:0; }
+}
+
+/* ==========================================================
+   Part 3 — Letter Card
+========================================================== */
+
+.letter{
+    width:min(500px,92vw);
+    background:var(--paper);
+    border-radius:6px 6px 18px 18px / 10px 10px 22px 22px;
+    padding:64px 44px 46px;
+    box-shadow:var(--shadow);
+    position:relative;
+    transform:rotate(-.6deg);
+    z-index:1;
+}
+
+.letter::after{
+    content:"";
+    position:absolute;
+    inset:10px -6px -10px 6px;
+    background:var(--blush);
+    border-radius:inherit;
+    transform:rotate(2.2deg);
+    z-index:-1;
+    box-shadow:0 20px 50px rgba(90,45,45,.08);
+}
+
+.letter::before{
+    content:"";
+    position:absolute;
+    top:0;left:14%;right:14%;
+    height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+
+.letter-top{
+    text-align:center;
+    color:var(--mauve);
+    letter-spacing:3px;
+    text-transform:uppercase;
+    font-size:.74rem;
+    margin-bottom:22px;
+}
+
+.description{
+    max-width:400px;
+    margin:0 auto 36px;
+    text-align:center;
+    line-height:1.95;
+    color:var(--mauve);
+    font-size:.96rem;
+}
+
+/* ==========================================================
+   Form — letter-stationery style
+========================================================== */
+
+#loginForm{
+    display:flex;
+    flex-direction:column;
+    gap:26px;
+}
+
+.field{
+    position:relative;
+}
+
+.field input{
+    width:100%;
+    padding:22px 4px 10px;
+    border:none;
+    border-bottom:1.5px solid rgba(140,74,78,.22);
+    background:transparent;
+    font-family:"Inter",sans-serif;
+    font-size:1rem;
+    color:var(--ink);
+    transition:border-color .3s;
+}
+
+.field input::placeholder{
+    color:transparent;
+}
+
+.field label{
+    position:absolute;
+    left:4px;
+    top:22px;
+    font-size:.95rem;
+    color:var(--mauve);
+    transition:.25s;
+    pointer-events:none;
+}
+
+.field input:focus,
+.field input:not(:placeholder-shown){
+    outline:none;
+}
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label{
+    top:0;
+    font-size:.68rem;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--rosewood);
+}
+
+.field input:focus{
+    border-bottom-color:var(--rosewood);
+}
+
+#loginForm .seal-button{
+    margin-top:8px;
+    align-self:center;
+}
+
+/* ==========================================================
+   Message
+========================================================== */
+
+#message{
+    text-align:center;
+    margin-top:22px;
+    min-height:24px;
+    color:var(--mauve);
+    font-size:.94rem;
+}
+
+/* ==========================================================
+   Part 4 — Letter reveal animation
+========================================================== */
+
+.fade-out{
+    animation:introFade .55s ease forwards;
+}
+
+@keyframes introFade{
+    to{
+        opacity:0;
+        transform:translateY(-20px);
+        filter:blur(8px);
+    }
+}
+
+.letter-show{
+    animation:letterReveal .85s cubic-bezier(.22,1,.36,1);
+}
+
+@keyframes letterReveal{
+    from{
+        opacity:0;
+        transform:translateY(46px) rotate(-2.4deg) scale(.96);
+        filter:blur(8px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) rotate(-.6deg) scale(1);
+        filter:blur(0);
+    }
+}
+
+/* ==========================================================
+   REDUCED MOTION
+========================================================== */
+
+@media (prefers-reduced-motion:reduce){
+    *{
+        animation:none !important;
+        transition:none !important;
+    }
+}
+
+/* ==========================================================
+   Part 5 — Responsive
+========================================================== */
+
+@media (max-width:992px){
+
+    .hero{
+        padding:40px 24px;
+        padding-top:max(40px,env(safe-area-inset-top));
+        padding-bottom:max(40px,env(safe-area-inset-bottom));
+    }
+
+    .intro{ width:min(560px,94%); }
+
+    .letter{ width:min(480px,94vw); padding:58px 36px 40px; }
+
+}
+
+@media (max-width:768px){
+
+    .hero{
+        padding:32px 20px;
+        padding-top:max(32px,env(safe-area-inset-top));
+        padding-bottom:max(32px,env(safe-area-inset-bottom));
+    }
+
+    .eyebrow{ font-size:.7rem; letter-spacing:3px; gap:10px; }
+
+    .eyebrow::before,
+    .eyebrow::after{ width:24px; }
+
+    .intro h1{
+        font-size:clamp(2.3rem,9vw,3.6rem);
+        margin-bottom:18px;
+    }
+
+    .intro p{ font-size:.95rem; max-width:320px; }
+
+    .seal{ --seal-size:48px; }
+
+    .seal--card{ --seal-size:64px; top:-32px; }
+
+    .seal-button .seal-label{ padding:14px 32px 11px; font-size:.94rem; }
+
+    .letter{
+        width:100%;
+        max-width:460px;
+        padding:50px 26px 34px;
+        border-radius:6px 6px 16px 16px / 8px 8px 18px 18px;
+    }
+
+    .description{ font-size:.92rem; margin-bottom:30px; }
+
+    .field input{ padding:18px 4px 8px; font-size:16px; }
+
+}
+
+@media (max-width:430px){
+
+    .hero{
+        padding:24px 18px;
+        padding-top:max(24px,env(safe-area-inset-top));
+        padding-bottom:max(24px,env(safe-area-inset-bottom));
+    }
+
+    .intro{ width:100%; }
+
+    .intro h1{ font-size:2.3rem; }
+
+    .intro p{ max-width:280px; font-size:.9rem; }
+
+    .seal--card{ --seal-size:56px; top:-28px; }
+
+    .letter{ padding:42px 20px 28px; }
+
+    .letter-top{ font-size:.68rem; }
+
+    .description{ font-size:.88rem; }
+
+}
+
+@media (max-width:360px){
+
+    .hero{
+        padding:20px 14px;
+        padding-top:max(20px,env(safe-area-inset-top));
+        padding-bottom:max(20px,env(safe-area-inset-bottom));
+    }
+
+    .intro h1{ font-size:2.05rem; }
+
+    .intro p{ font-size:.85rem; }
+
+    .seal-button .seal-label{ padding:13px 26px 10px; font-size:.9rem; }
+
+    .letter{ padding:38px 16px 24px; }
+
+}
+
+/* ==========================================================
+   Part 6 — Short viewport / landscape (phones rotated,
+   or on-screen keyboard open while filling the form).
+   Switches to top-aligned + scrollable instead of vertical
+   centering, which is what cuts off the seal or buttons
+   on shorter screens.
+========================================================== */
+
+@media (max-height:680px){
+
+    .hero{
+        align-items:flex-start;
+        padding-top:max(28px,env(safe-area-inset-top));
+    }
+
+    .seal-button{ margin-top:28px; }
+
+}
+
+@media (max-height:500px){
+
+    .letter{ padding-top:46px; }
+
+    .seal--card{ top:-26px; }
+
+    .description{ margin-bottom:20px; }
+
+    #loginForm{ gap:16px; }
+
+}
+
+@media (orientation:landscape) and (max-height:480px){
+
+    .hero{ align-items:flex-start; padding-top:20px; }
+
+    .intro h1{ font-size:clamp(1.8rem,5vw,2.6rem); margin-bottom:12px; }
+
+    .intro p{ display:none; } /* redundant in tight landscape, avoids overflow */
+
+    .seal-button{ margin-top:18px; }
+
+    .letter{ padding-top:40px; }
+
+}

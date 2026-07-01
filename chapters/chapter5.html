@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chapter V — Things I Never Said</title>
+<meta name="description" content="Some feelings are easier to write than to say.">
+
+<!-- Hanya 2 keluarga font, weight terbatas, supaya ringan di HP low-end -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Italianno&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/css/chapter5.css">
+</head>
+<body>
+
+  <!-- progress bar tipis di atas, nunjukin posisi baca -->
+  <div class="progress-track" aria-hidden="true">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <main id="top">
+
+    <!-- ============ SCENE 01 — OPENING ============ -->
+    <section class="scene scene--opening" id="scene-01" data-scene="01">
+      <div class="petals" aria-hidden="true">
+        <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+        <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+      </div>
+
+      <div class="lamp-glow" aria-hidden="true"></div>
+
+      <div class="scene-eyebrow reveal" data-delay="0">
+        <span class="eyebrow-num">01</span><span class="eyebrow-label">Opening</span>
+      </div>
+
+      <div class="opening-hero">
+        <p class="chapter-tag reveal" data-delay="1">Chapter V</p>
+        <h1 class="hero-title reveal" data-delay="2">Things I Never Said</h1>
+        <p class="hero-sub reveal" data-delay="3">Some feelings are easier to write than to say.</p>
+      </div>
+
+      <div class="line-stack opening-lines">
+        <p class="reveal-line">Setelah mengenalmu...</p>
+        <p class="reveal-line">Ada banyak hal...</p>
+        <p class="reveal-line">Yang ternyata tidak pernah sempat kuucapkan.</p>
+      </div>
+
+      <button class="scroll-cue" id="scrollCue" aria-label="Scroll untuk melanjutkan">
+        <span class="scroll-cue__arrow">⌄</span>
+        <span class="scroll-cue__text">Scroll untuk melanjutkan</span>
+      </button>
+    </section>
+
+    <!-- ============ SCENE 02 — EMPTY LETTERS ============ -->
+    <section class="scene scene--letters" id="scene-02" data-scene="02">
+      <div class="scene-eyebrow reveal">
+        <span class="eyebrow-num">02</span><span class="eyebrow-label">Empty Letters</span>
+      </div>
+
+      <div class="line-stack">
+        <p class="reveal-line">Ada beberapa kata...</p>
+        <p class="reveal-line">Yang lebih mudah ditulis...</p>
+        <p class="reveal-line">Daripada diucapkan.</p>
+      </div>
+
+      <div class="envelope-field reveal" data-delay="2">
+        <span class="env env--a" aria-hidden="true"></span>
+        <span class="env env--b" aria-hidden="true"></span>
+        <span class="env env--c" aria-hidden="true"></span>
+        <span class="env env--d" aria-hidden="true"></span>
+        <span class="env env--e" aria-hidden="true"></span>
+
+        <button class="envelope-main" id="envelopeMain" aria-expanded="false" aria-label="Buka Letter I">
+          <span class="envelope-main__flap"></span>
+          <span class="envelope-main__body">
+            <span class="envelope-main__label">Letter I</span>
+          </span>
+          <span class="envelope-main__paper" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <p class="hint-text">Ketuk amplop untuk membukanya</p>
+    </section>
+
+    <!-- ============ SCENE 03 — LETTER I ============ -->
+    <section class="scene scene--letter" id="scene-03" data-scene="03">
+      <div class="scene-eyebrow reveal">
+        <span class="eyebrow-num">03</span><span class="eyebrow-label">Letter I</span>
+      </div>
+
+      <div class="letter-grid">
+        <div class="paper-card reveal" data-delay="1">
+          <p class="paper-line">Terima kasih.</p>
+          <p class="paper-line">Karena tanpa sadar...</p>
+          <p class="paper-line">Kamu membuat hari-hariku<br>menjadi lebih berwarna.</p>
+        </div>
+
+        <div class="polaroid polaroid--sunset reveal" data-delay="3" aria-hidden="true">
+          <div class="polaroid__photo"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 04 — LETTER II ============ -->
+    <section class="scene scene--letter" id="scene-04" data-scene="04">
+      <div class="scene-eyebrow reveal">
+        <span class="eyebrow-num">04</span><span class="eyebrow-label">Letter II</span>
+      </div>
+
+      <div class="letter-grid letter-grid--reverse">
+        <div class="paper-card reveal" data-delay="1">
+          <p class="paper-line">Aku selalu senang...</p>
+          <p class="paper-line">Kamu mendengar cerita-ceritaku.</p>
+          <p class="paper-line">Bahkan ketika menurutku...</p>
+          <p class="paper-line">Cerita itu tidak penting.</p>
+        </div>
+
+        <div class="phone-mock reveal" data-delay="3" aria-hidden="true">
+          <div class="phone-mock__notch"></div>
+          <div class="phone-mock__header">
+            <span class="phone-mock__avatar"></span>
+            <span class="phone-mock__name">Amaww Seraphine ✦</span>
+          </div>
+          <div class="phone-mock__thread">
+            <span class="bubble bubble--in">KA ELL</span>
+            <span class="bubble bubble--out">Amaw aku mau cerita</span>
+            <span class="bubble bubble--in">Cerita apa KA</span>
+            <span class="bubble bubble--in">Boleh aku dengerin</span>
+            <span class="bubble bubble--out">Jadi gini...</span>
+            <span class="bubble bubble--in">Gitu ya, gini KA....</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 05 — LETTER III ============ -->
+    <section class="scene scene--letter" id="scene-05" data-scene="05">
+      <div class="scene-eyebrow reveal">
+        <span class="eyebrow-num">05</span><span class="eyebrow-label">Letter III</span>
+      </div>
+
+      <div class="letter-grid">
+        <div class="paper-card reveal" data-delay="1">
+          <p class="paper-line">Aku suka caramu tertawa.</p>
+          <p class="paper-line">Aku suka caramu mendengar cerita.</p>
+          <p class="paper-line">Aku suka ketika kamu excited<br>terhadap sesuatu.</p>
+          <p class="paper-line">Dan aku bahkan suka ketika kamu bilang...</p>
+          <p class="paper-quote">"Kaka Mah Nyebelin"</p>
+        </div>
+
+        <div class="photo-stack reveal" data-delay="3" aria-hidden="true">
+          <div class="photo-stack__item photo-stack__item--1"></div>
+          <div class="photo-stack__item photo-stack__item--2"></div>
+          <div class="photo-stack__item photo-stack__item--3">
+            <span class="photo-stack__caption">I don't know yet.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 06 — THINGS I ADMIRE ============ -->
+    <section class="scene scene--admire" id="scene-06" data-scene="06">
+      <div class="scene-eyebrow reveal">
+        <span class="eyebrow-num">06</span><span class="eyebrow-label">Things I Admire</span>
+      </div>
+
+      <div class="admire-grid">
+        <div class="admire-card reveal" data-delay="0">
+          <span class="admire-card__icon">🌸</span>
+          <span class="admire-card__label">kindness</span>
+        </div>
+        <div class="admire-card reveal" data-delay="1">
+          <span class="admire-card__icon">🎨</span>
+          <span class="admire-card__label">creativity</span>
+        </div>
+        <div class="admire-card reveal" data-delay="2">
+          <span class="admire-card__icon">🎵</span>
+          <span class="admire-card__label">taste in music</span>
+        </div>
+        <div class="admire-card reveal" data-delay="3">
+          <span class="admire-card__icon">🌇</span>
+          <span class="admire-card__label">cara menikmati senja</span>
+        </div>
+        <div class="admire-card reveal" data-delay="4">
+          <span class="admire-card__icon">💐</span>
+          <span class="admire-card__label">cara menyukai bunga</span>
+        </div>
+        <div class="admire-card reveal" data-delay="5">
+          <span class="admire-card__icon">🐈</span>
+          <span class="admire-card__label">cara menyayangi kucing</span>
+        </div>
+      </div>
+
+      <p class="admire-caption reveal" data-delay="6">Setiap hal tentangmu selalu menginspirasi.</p>
+    </section>
+
+    <!-- ============ SCENE 07 — CONFESSION ============ -->
+    <section class="scene scene--confession" id="scene-07" data-scene="07">
+      <div class="candle" aria-hidden="true">
+        <span class="candle__flame"></span>
+        <span class="candle__body"></span>
+      </div>
+
+      <div class="scene-eyebrow reveal">
+        <span class="eyebrow-num">07</span><span class="eyebrow-label">Confession</span>
+      </div>
+
+      <div class="line-stack confession-lines">
+        <p class="reveal-line">Jujur...</p>
+        <p class="reveal-line">Aku tidak pernah menyangka...</p>
+        <p class="reveal-line">Bahwa seseorang...</p>
+        <p class="reveal-line">Bisa menetap di pikiranku...</p>
+        <p class="reveal-line reveal-line--accent">Hanya karena hal-hal kecil.</p>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 08 — CLOSING ============ -->
+    <section class="scene scene--closing" id="scene-08" data-scene="08">
+      <div class="scene-eyebrow scene-eyebrow--dark reveal">
+        <span class="eyebrow-num">08</span><span class="eyebrow-label">Closing</span>
+      </div>
+
+      <div class="line-stack closing-lines">
+        <p class="reveal-line">Dan mungkin...</p>
+        <p class="reveal-line">Tidak semua perasaan harus memiliki jawaban.</p>
+        <p class="reveal-line">Kadang...</p>
+        <p class="reveal-line">Menyimpannya sebagai kenangan...</p>
+        <p class="reveal-line">Sudah lebih dari cukup, kan?.</p>
+      </div>
+
+      <div class="closing-cta reveal" data-delay="6">
+        <p class="closing-cta__note">Chapter V selesai 💌</p>
+        <!--
+          Ganti href="#chapter-vi" di bawah dengan URL halaman Chapter VI kamu,
+          atau biarkan, lalu sambungkan lewat goToChapterVI() di script.js
+        -->
+<a href="chapter6.html" class="continue-btn" id="continueBtn">
+  <span>Continue to Chapter VI</span>
+  <span class="continue-btn__arrow">→</span>
+</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- bottom navigation: Prev / progress / Next -->
+  <nav class="nav-bar" id="navBar" aria-label="Navigasi cerita">
+    <button type="button" class="nav-btn nav-btn--prev" id="prevBtn" aria-label="Sebelumnya">
+      <span aria-hidden="true">←</span> Kembali
+    </button>
+    <span class="nav-progress" id="navProgress" aria-live="polite">01 / 08</span>
+    <button type="button" class="nav-btn nav-btn--next" id="nextBtn" aria-label="Lanjut">
+      Lanjut <span aria-hidden="true">→</span>
+    </button>
+  </nav>
+
+  <script src="../assets/js/chapter5.js"></script>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="../assets/js/chapter5.js"></script>
+</body>
+</html>

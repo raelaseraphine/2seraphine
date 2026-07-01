@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🏡 Hanami Archive</title>
+<meta name="description" content="Hanami Archive — rumah kecil tempat semua kenangan Hanami disimpan.">
+
+<!-- Font: judul pakai Shippori Mincho (serif Jepang, hangat), isi pakai Zen Maru Gothic (rounded, ramah).
+     Hanya subset Latin yang ke-download otomatis oleh Google Fonts, jadi tetap ringan. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/css/archive.css">
+</head>
+<body class="ambience-dusk">
+
+<!-- Kelopak sakura mengambang, dibuat lewat JS (jumlah dibatasi biar ringan di HP) -->
+<div class="petals" id="petals" aria-hidden="true"></div>
+
+<!-- ============ OPENING SEQUENCE ============ -->
+<div class="boot" id="boot" role="status">
+  <div class="boot__stage" id="bootLoading">
+    <p class="boot__eyebrow">🌸</p>
+    <p class="boot__label">Opening Archive...</p>
+    <div class="boot__bar" aria-hidden="true"><div class="boot__bar-fill" id="bootBarFill"></div></div>
+    <p class="boot__percent" id="bootPercent">0%</p>
+  </div>
+
+  <div class="boot__stage boot__welcome" id="bootWelcome" hidden>
+    <p class="boot__line" data-line>Selamat datang kembali.</p>
+    <p class="boot__line" data-line>Ceritanya memang sudah selesai.</p>
+    <p class="boot__line" data-line>Tapi...</p>
+    <p class="boot__line" data-line>semua kenangan masih tinggal di sini.</p>
+    <p class="boot__line" data-line>Selamat datang di...</p>
+    <p class="boot__line boot__line--title" data-line>🏡 HANAMI ARCHIVE</p>
+    <button class="btn btn--primary boot__enter" id="bootEnter" type="button" hidden>Masuk ke rumah →</button>
+  </div>
+
+  <button class="boot__skip" id="bootSkip" type="button">Lewati ›</button>
+</div>
+
+<!-- ============ FLOATING ROOM DOCK ============ -->
+<nav class="dock" id="dock" aria-label="Navigasi ruangan Hanami">
+  <button class="dock__item is-active" data-target="#hub" type="button">
+    <span class="dock__icon">🏡</span><span class="dock__tip">Beranda</span>
+  </button>
+  <button class="dock__item" data-target="#library" type="button">
+    <span class="dock__icon">📚</span><span class="dock__tip">Library</span>
+  </button>
+  <button class="dock__item" data-target="#music" type="button">
+    <span class="dock__icon">🎵</span><span class="dock__tip">Music Room</span>
+  </button>
+  <button class="dock__item" data-target="#gallery" type="button">
+    <span class="dock__icon">🖼</span><span class="dock__tip">Gallery</span>
+  </button>
+  <button class="dock__item" data-target="#memory-book" type="button">
+    <span class="dock__icon">💌</span><span class="dock__tip">Memory Book</span>
+  </button>
+  <button class="dock__item" data-target="#birthday" type="button">
+    <span class="dock__icon">🎂</span><span class="dock__tip">Birthday Room</span>
+  </button>
+  <button class="dock__item" data-target="#about" type="button">
+    <span class="dock__icon">🌸</span><span class="dock__tip">About Hanami</span>
+  </button>
+  <button class="dock__item dock__item--exit" id="exitBtn" type="button">
+    <span class="dock__icon">🚪</span><span class="dock__tip">Exit</span>
+  </button>
+</nav>
+
+<main id="main">
+
+  <!-- ============ HUB / HERO ============ -->
+  <section class="hub" id="hub">
+    <div class="hub__sky" aria-hidden="true"></div>
+
+    <div class="hub__intro">
+      <p class="hub__eyebrow">🌸 Hanami Archive</p>
+      <h1 class="hub__title">Every memory<br>deserves a home.</h1>
+      <p class="hub__desc">Ceritanya memang sudah selesai — tapi rumah ini tidak pernah tutup. Jelajahi tiap ruangan, dengarkan lagu-lagu lama, buka lagi album foto. Semuanya masih di sini, kapan pun kamu ingin kembali.</p>
+    </div>
+
+    <!-- Living room nook: objek-objek kecil yang bisa diklik -->
+    <div class="nook" id="nook" aria-label="Ruang duduk">
+      <button class="nook__obj nook__window" id="windowObj" type="button" aria-label="Lihat keluar jendela">
+        <span class="nook__icon">🪟</span>
+        <span class="nook__caption">Window</span>
+      </button>
+
+      <div class="nook__obj nook__tea" aria-label="Meja teh">
+        <span class="nook__caption">☕ Tea Table</span>
+        <div class="nook__tea-items">
+          <button class="tea-item" id="milkItem" type="button" aria-label="Banana milk" data-level="4">🥛</button>
+          <button class="tea-item" id="cakeItem" type="button" aria-label="Tiramisu" data-bites="0">🍰</button>
+          <button class="tea-item" id="flowerItem" type="button" aria-label="Bunga sakura">🌸</button>
+          <button class="tea-item" id="bookItem" type="button" aria-label="Buku kecil">📖</button>
+        </div>
+      </div>
+
+      <button class="nook__obj nook__cat" id="catObj" type="button" aria-label="Kucing sedang tidur">
+        <span class="nook__icon" id="catEmoji">🐈</span>
+        <span class="nook__bubble" id="catBubble" hidden>meong~</span>
+        <span class="nook__caption">Cat</span>
+      </button>
+
+      <button class="nook__obj nook__pot" id="secretPot" type="button" aria-label="Pot bunga sakura" data-clicks="0">
+        <span class="nook__icon">🪴</span>
+        <span class="nook__caption">Sakura Pot</span>
+      </button>
+    </div>
+
+    <!-- Kartu ruangan -->
+    <div class="rooms" id="rooms">
+      <a class="room-card" data-target="#library" href="#library" style="--room-accent:var(--gold)">
+        <span class="room-card__plaque">📚 Library</span>
+        <span class="room-card__desc">Baca ulang seluruh perjalanan Hanami.</span>
+      </a>
+      <a class="room-card" data-target="#music" href="#music" style="--room-accent:var(--sakura)">
+        <span class="room-card__plaque">🎵 Music Room</span>
+        <span class="room-card__desc">Dengarkan lagu-lagu pilihan kita.</span>
+      </a>
+      <a class="room-card" data-target="#gallery" href="#gallery" style="--room-accent:var(--gold-bright)">
+        <span class="room-card__plaque">🖼 Gallery</span>
+        <span class="room-card__desc">Kenangan, ilustrasi, dan proses di balik Hanami.</span>
+      </a>
+      <a class="room-card" data-target="#memory-book" href="#memory-book" style="--room-accent:var(--sakura-deep)">
+        <span class="room-card__plaque">💌 Memory Book</span>
+        <span class="room-card__desc">Halaman terakhir yang kita tulis bersama.</span>
+      </a>
+      <a class="room-card" data-target="#birthday" href="#birthday" style="--room-accent:var(--gold)">
+        <span class="room-card__plaque">🎂 Birthday Room</span>
+        <span class="room-card__desc">Kunjungi kembali kejutan ulang tahunmu.</span>
+      </a>
+      <a class="room-card" data-target="#about" href="#about" style="--room-accent:var(--leaf)">
+        <span class="room-card__plaque">🌸 About Hanami</span>
+        <span class="room-card__desc">Tentang project ini, dibuat dengan cinta.</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ LIBRARY ============ -->
+  <section class="panel" id="library" aria-labelledby="library-title">
+    <header class="panel__head">
+      <h2 id="library-title" class="panel__title">📚 Library</h2>
+      <p class="panel__sub">Pilih buku untuk membaca ulang.</p>
+    </header>
+
+    <div class="shelf">
+      <!-- Ganti href di bawah supaya mengarah ke file HTML chapter kamu masing-masing -->
+      <a class="book" href="chapter-1.html"><span class="book__spine">Chapter<br>I</span></a>
+      <a class="book" href="chapter-2.html"><span class="book__spine">Chapter<br>II</span></a>
+      <a class="book" href="chapter-3.html"><span class="book__spine">Chapter<br>III</span></a>
+      <a class="book" href="chapter-4.html"><span class="book__spine">Chapter<br>IV</span></a>
+      <a class="book" href="chapter-5.html"><span class="book__spine">Chapter<br>V</span></a>
+      <a class="book" href="chapter-6.html"><span class="book__spine">Chapter<br>VI</span></a>
+      <a class="book book--epilogue" href="epilogue.html"><span class="book__spine">Epilogue</span></a>
+      <a class="book book--credits" href="end-credits.html"><span class="book__spine">End<br>Credits</span></a>
+      <a class="book book--credits" href="after-credits.html"><span class="book__spine">After<br>Credits</span></a>
+    </div>
+    <p class="panel__hint">Klik salah satu buku untuk membuka halaman itu. Buka <code>archive.html</code> lalu ganti atribut <code>href</code> pada tiap <code>&lt;a class="book"&gt;</code> supaya mengarah ke file chapter kamu sendiri.</p>
+  </section>
+
+  <!-- ============ MUSIC ROOM ============ -->
+  <section class="panel" id="music" aria-labelledby="music-title">
+    <header class="panel__head">
+      <h2 id="music-title" class="panel__title">🎵 Music Room</h2>
+      <p class="panel__sub">Tempat semua lagu yang mengingatkan kita.</p>
+    </header>
+
+    <div class="music">
+      <div class="music__playlists" id="playlistList" role="tablist" aria-label="Daftar playlist">
+        <!-- diisi oleh JS dari data playlists -->
+      </div>
+
+      <div class="music__body">
+        <div class="music__tracks" id="trackList" aria-live="polite">
+          <!-- diisi oleh JS -->
+        </div>
+
+        <div class="music__player">
+          <p class="music__now-label">Now Playing</p>
+          <p class="music__now-title" id="nowTitle">Pilih lagu di samping</p>
+          <p class="music__now-artist" id="nowArtist">—</p>
+
+          <input class="music__progress" id="progress" type="range" min="0" max="100" value="0" aria-label="Progres lagu">
+          <div class="music__time">
+            <span id="timeCurrent">0:00</span>
+            <span id="timeTotal">0:00</span>
+          </div>
+
+          <div class="music__controls">
+            <button class="music__btn" id="prevBtn" type="button" aria-label="Lagu sebelumnya">⏮</button>
+            <button class="music__btn music__btn--play" id="playBtn" type="button" aria-label="Putar">▶️</button>
+            <button class="music__btn" id="nextBtn" type="button" aria-label="Lagu berikutnya">⏭</button>
+          </div>
+
+          <div class="music__volume">
+            <span aria-hidden="true">🔊</span>
+            <input type="range" id="volume" min="0" max="100" value="70" aria-label="Volume">
+          </div>
+
+          <p class="music__note" id="musicNote" hidden></p>
+        </div>
+      </div>
+    </div>
+    <p class="panel__hint">Belum ada file lagu di sini. Buka <code>script.js</code>, cari <code>const playlists</code>, lalu isi <code>src:</code> tiap lagu dengan path file mp3 kamu (contoh: <code>"audio/hanami-theme.mp3"</code>).</p>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="panel" id="gallery" aria-labelledby="gallery-title">
+    <header class="panel__head">
+      <h2 id="gallery-title" class="panel__title">🖼 Gallery</h2>
+      <p class="panel__sub">Semua kenangan tersimpan di sini.</p>
+    </header>
+
+    <div class="tabs" role="tablist" aria-label="Album galeri">
+      <button class="tabs__btn is-active" data-album="memories" type="button" role="tab" aria-selected="true">📸 Memories</button>
+      <button class="tabs__btn" data-album="artwork" type="button" role="tab" aria-selected="false">🎨 Artwork</button>
+      <button class="tabs__btn" data-album="behind" type="button" role="tab" aria-selected="false">💻 Behind Hanami</button>
+    </div>
+
+    <div class="polaroids" id="albumMemories" role="tabpanel">
+      <!-- Ganti setiap .polaroid__frame dengan <img src="fotomu.jpg" alt="..."> saat foto asli sudah siap -->
+      <figure class="polaroid" data-caption="Hari itu... ternyata menjadi salah satu kenangan favoritku.">
+        <div class="polaroid__frame"><span>📷</span></div>
+        <figcaption>Photo 01</figcaption>
+      </figure>
+      <figure class="polaroid" data-caption="Aku suka foto ini. :)">
+        <div class="polaroid__frame"><span>📷</span></div>
+        <figcaption>Photo 02</figcaption>
+      </figure>
+      <figure class="polaroid" data-caption="Mungkin... kita tidak sadar waktu itu.">
+        <div class="polaroid__frame"><span>📷</span></div>
+        <figcaption>Photo 03</figcaption>
+      </figure>
+      <figure class="polaroid" data-caption="Silly faces!">
+        <div class="polaroid__frame"><span>📷</span></div>
+        <figcaption>Photo 04</figcaption>
+      </figure>
+      <figure class="polaroid" data-caption="Tempat kecil ini, penuh cerita.">
+        <div class="polaroid__frame"><span>📷</span></div>
+        <figcaption>Photo 05</figcaption>
+      </figure>
+    </div>
+
+    <div class="polaroids" id="albumArtwork" role="tabpanel" hidden>
+      <figure class="polaroid" data-caption="Concept art Chapter I.">
+        <div class="polaroid__frame"><span>🎨</span></div>
+        <figcaption>Concept Art</figcaption>
+      </figure>
+      <figure class="polaroid" data-caption="Wallpaper Hanami.">
+        <div class="polaroid__frame"><span>🎨</span></div>
+        <figcaption>Wallpaper</figcaption>
+      </figure>
+      <figure class="polaroid" data-caption="Storyboard awal.">
+        <div class="polaroid__frame"><span>🎨</span></div>
+        <figcaption>Storyboard</figcaption>
+      </figure>
+    </div>
+
+    <div class="polaroids" id="albumBehind" role="tabpanel" hidden>
+      <figure class="polaroid" data-caption="Screenshot proses coding.">
+        <div class="polaroid__frame"><span>💻</span></div>
+        <figcaption>Proses Coding</figcaption>
+      </figure>
+      <figure class="polaroid" data-caption="Sketsa desain awal.">
+        <div class="polaroid__frame"><span>✏️</span></div>
+        <figcaption>Sketsa Awal</figcaption>
+      </figure>
+      <figure class="polaroid" data-caption="Foto referensi & inspirasi.">
+        <div class="polaroid__frame"><span>📎</span></div>
+        <figcaption>Referensi</figcaption>
+      </figure>
+    </div>
+    <p class="panel__hint">Klik foto untuk melihat lebih besar.</p>
+  </section>
+
+  <!-- ============ MEMORY BOOK ============ -->
+  <section class="panel" id="memory-book" aria-labelledby="memory-title">
+    <header class="panel__head">
+      <h2 id="memory-title" class="panel__title">💌 Memory Book</h2>
+      <p class="panel__sub">Halaman terakhir kita berdua.</p>
+    </header>
+
+    <div class="memory-book">
+      <div class="memory-book__page">
+        <p class="memory-book__from">Pesan dari Elga</p>
+        <p class="memory-book__text">Tulis pesanmu di sini. Halaman ini persis seperti terakhir kali ditulis — ganti teks ini di <code>archive.html</code> dengan pesan aslimu untuk Mawar.</p>
+      </div>
+      <div class="memory-book__spine" aria-hidden="true"></div>
+      <div class="memory-book__page">
+        <p class="memory-book__from">Pesan dari Mawar</p>
+        <p class="memory-book__text">Halaman ini menunggu balasanmu. Tempelkan pesan Mawar di sini kapan pun sudah siap.</p>
+      </div>
+    </div>
+    <p class="panel__hint">Halaman ini tidak bisa diubah lagi — karena kenangan sudah selesai. 20 Juni 2026</p>
+  </section>
+
+  <!-- ============ BIRTHDAY ROOM ============ -->
+  <section class="panel" id="birthday" aria-labelledby="birthday-title">
+    <header class="panel__head">
+      <h2 id="birthday-title" class="panel__title">🎂 Birthday Room</h2>
+      <p class="panel__sub">Kunjungi kembali kejutan ulang tahunmu — semua quest sudah selesai.</p>
+    </header>
+
+    <div class="birthday">
+      <div class="birthday__checklist">
+        <p class="birthday__done">🌸 Completed <span>100%</span></p>
+        <ul>
+          <li>🎈 Balon</li>
+          <li>🪟 Jendela</li>
+          <li>🖼 Gallery</li>
+          <li>📖 Buku Hanami</li>
+          <li>🕯 Tiup Lilin</li>
+          <li>🎁 Hadiah</li>
+          <li>💌 Halaman Terakhir</li>
+        </ul>
+      </div>
+
+      <div class="birthday__scene">
+        <div class="birthday__cake">
+          <span class="birthday__candle" id="candle">🕯</span>
+          <span aria-hidden="true">🎂</span>
+        </div>
+        <p class="birthday__hint-small">Klik lilin untuk meniupnya</p>
+
+        <div class="birthday__balloons" id="balloons">
+          <button class="balloon" type="button" aria-label="Balon">🎈</button>
+          <button class="balloon" type="button" aria-label="Balon">🎈</button>
+          <button class="balloon" type="button" aria-label="Balon">🎈</button>
+          <button class="balloon" type="button" aria-label="Balon">🎈</button>
+          <button class="balloon" type="button" aria-label="Balon">🎈</button>
+        </div>
+
+        <div class="birthday__row">
+          <button class="btn btn--ghost" id="giftBtn" type="button">🎁 Buka Hadiah</button>
+          <button class="btn btn--ghost" id="letterBtn" type="button">📖 Baca Surat</button>
+        </div>
+        <p class="birthday__reveal" id="birthdayReveal" hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT HANAMI ============ -->
+  <section class="panel" id="about" aria-labelledby="about-title">
+    <header class="panel__head">
+      <h2 id="about-title" class="panel__title">🌸 About Hanami</h2>
+      <p class="panel__sub">Tentang project ini.</p>
+    </header>
+
+    <div class="about">
+      <div class="about__card">
+        <p class="about__name">HANAMI</p>
+        <p class="about__version">Version 1.0</p>
+        <div class="about__row">
+          <div><span class="about__label">Started</span><span class="about__value">2026</span></div>
+          <div><span class="about__label">Finished</span><span class="about__value">2026</span></div>
+        </div>
+        <hr class="about__hr">
+        <p class="about__label">Made with</p>
+        <p class="about__made">💻 HTML &nbsp; 🎨 CSS &nbsp; ⚙ JavaScript &nbsp; ☕ Coffee &nbsp; 🌸 Sakura &nbsp; ❤ Feelings</p>
+        <hr class="about__hr">
+        <div class="about__row">
+          <div><span class="about__label">Created by</span><span class="about__value">Elga</span></div>
+          <div><span class="about__label">Dedicated to</span><span class="about__value">Mawar</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECRET GARDEN (tersembunyi) ============ -->
+  <section class="panel panel--secret" id="secret-garden" aria-labelledby="secret-title" hidden>
+    <header class="panel__head">
+      <h2 id="secret-title" class="panel__title">🌸 Secret Garden</h2>
+      <p class="panel__sub">Kamu menemukan tempat rahasia.</p>
+    </header>
+    <div class="secret">
+      <div class="secret__scene" aria-hidden="true">
+        <span class="secret__tree">🌳</span>
+        <span class="secret__bench">🪑</span>
+        <span class="secret__piano">🎹</span>
+      </div>
+      <p class="secret__line">Ada beberapa tempat...</p>
+      <p class="secret__line">yang memang dibuat...</p>
+      <p class="secret__line">hanya untuk berdiam sebentar.</p>
+      <p class="secret__note">Tidak ada quest. Tidak ada tujuan. Hanya tempat untuk menikmati suasana. 🍃</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ WINDOW VIEW ============ -->
+<div class="window-view" id="windowView" hidden>
+  <button class="window-view__close" id="windowClose" type="button" aria-label="Tutup jendela">✕</button>
+  <div class="window-view__sky" aria-hidden="true"></div>
+  <p class="window-view__caption">🌇 Senja · 🌸 Sakura · 🌬 Angin</p>
+</div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Lihat foto">
+  <button class="lightbox__close" id="lightboxClose" type="button" aria-label="Tutup">✕</button>
+  <figure class="lightbox__figure">
+    <div class="lightbox__frame" id="lightboxFrame"><span id="lightboxIcon">📷</span></div>
+    <figcaption id="lightboxCaption"></figcaption>
+  </figure>
+</div>
+
+<!-- ============ EXIT MODAL ============ -->
+<div class="modal" id="exitModal" hidden role="dialog" aria-modal="true" aria-label="Konfirmasi keluar">
+  <div class="modal__box">
+    <p class="modal__question">Apakah ingin meninggalkan Hanami?</p>
+    <div class="modal__actions">
+      <button class="btn btn--ghost" id="exitCancel" type="button">Kembali</button>
+      <button class="btn btn--primary" id="exitConfirm" type="button">Sampai Jumpa</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ GOODBYE SCREEN ============ -->
+<div class="goodbye" id="goodbye" hidden>
+  <p class="goodbye__line" data-line>🌸</p>
+  <p class="goodbye__line" data-line>Terima kasih sudah kembali.</p>
+  <p class="goodbye__line" data-line>Rumah ini...</p>
+  <p class="goodbye__line" data-line>akan selalu ada.</p>
+  <p class="goodbye__line" data-line>Sampai jumpa lagi.</p>
+  <button class="btn btn--primary goodbye__return" id="goodbyeReturn" type="button" hidden>Kembali ke rumah</button>
+</div>
+
+<audio id="player" preload="none"></audio>
+
+<script src="../assets/js/archive.js"></script>
+</body>
+</html>

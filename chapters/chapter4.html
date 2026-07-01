@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter IV • The Little Museum About You</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/chapter4.css">
+</head>
+<body>
+
+<!-- BACKGROUND -->
+<div class="bg-wrap">
+    <div class="bg-gradient"></div>
+    <div class="bg-petals" id="bgPetals"></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- HEADER -->
+<header class="site-header" id="siteHeader">
+    <div class="header-left">
+        <span class="header-chapter">Chapter IV</span>
+        <span class="header-title">The Little Museum About You</span>
+    </div>
+    <div class="header-right">IV / VI</div>
+</header>
+
+<!-- ==================== SCREEN 1: INTRO ==================== -->
+<section class="screen" id="screenIntro">
+    <div class="intro-center">
+        <p class="intro-text" id="introText"></p>
+    </div>
+</section>
+
+<!-- ==================== SCREEN 2: MUSIK PLAYER ==================== -->
+<section class="screen hidden" id="screenMusic">
+    <div class="music-wrap">
+        <div class="music-card">
+            <div class="music-tag">Before We Begin</div>
+            <div class="music-player">
+                <div class="music-art">
+                    <img src="../assets/img/perunggu.jpg" alt="Ini Abadi" id="albumArt" onerror="this.style.background='linear-gradient(135deg,#CDA6AE,#B98F98)'">
+                    <div class="music-art-overlay">♪</div>
+                </div>
+                <div class="music-info">
+                    <div class="music-now">♩ now playing</div>
+                    <h2 class="music-title">ini abadi</h2>
+                    <p class="music-artist">Perunggu</p>
+                    <div class="music-bar">
+                        <div class="music-progress" id="musicProgress"></div>
+                    </div>
+                    <button class="music-btn" id="playBtn">▶ Putar Dulu</button>
+                </div>
+            </div>
+            <p class="music-note">trust me, it'll make more sense later. ♡</p>
+        </div>
+        <!-- decorative petals -->
+        <div class="deco-petal p1">❀</div>
+        <div class="deco-petal p2">✿</div>
+        <div class="deco-petal p3">❀</div>
+    </div>
+</section>
+
+<!-- ==================== SCREEN 3: MUSEUM INTRO ==================== -->
+<section class="screen hidden" id="screenMuseumIntro">
+    <div class="intro-center">
+        <p class="intro-text" id="museumIntroText"></p>
+    </div>
+</section>
+
+<!-- ==================== SCREEN 4: EXHIBIT ==================== -->
+<section class="screen hidden" id="screenExhibit">
+
+    <!-- mini music player -->
+    <div class="mini-player hidden" id="miniPlayer">
+        <div class="mini-disc" id="miniDisc"></div>
+        <div class="mini-info">
+            <span class="mini-title">♪ Ini Abadi</span>
+            <span class="mini-artist">Perunggu</span>
+        </div>
+    </div>
+
+    <!-- exhibit counter -->
+    <div class="exhibit-counter hidden" id="exhibitCounter">
+        <span class="counter-label">SERAPHINE MUSEUM</span>
+        <span class="counter-num" id="counterNum">01 / 08</span>
+    </div>
+
+    <!-- progress bar -->
+    <div class="exhibit-progress hidden" id="exhibitProgress">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- card container -->
+    <div class="card-stage" id="cardStage">
+
+        <!-- CARD: each exhibit is shown here dynamically -->
+        <div class="exhibit-card" id="exhibitCard">
+
+            <!-- scrapbook decorations (injected by JS per exhibit) -->
+            <div class="card-decos" id="cardDecos"></div>
+
+            <!-- polaroid image -->
+            <div class="polaroid-wrap" id="polaroidWrap">
+                <div class="polaroid">
+                    <img class="polaroid-img" id="exhibitImg" src="" alt="">
+                    <p class="polaroid-caption" id="polaroidCaption"></p>
+                </div>
+            </div>
+
+            <!-- sticky note content -->
+            <div class="sticky-wrap" id="stickyWrap">
+                <div class="sticky-note">
+                    <div class="sticky-num" id="stickyNum"></div>
+                    <div class="sticky-category" id="stickyCategory"></div>
+                    <h2 class="sticky-title" id="stickyTitle"></h2>
+                    <p class="sticky-desc" id="stickyDesc"></p>
+                </div>
+            </div>
+
+            <!-- next button -->
+            <button class="next-btn" id="nextBtn">
+                <span id="nextBtnText">Selanjutnya →</span>
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==================== SCREEN 5: REFLECTION ==================== -->
+<section class="screen hidden" id="screenReflection">
+    <div class="intro-center">
+        <p class="intro-text serif-text" id="reflectionText"></p>
+    </div>
+</section>
+
+<!-- ==================== SCREEN 6: ENDING ==================== -->
+<section class="screen hidden" id="screenEnding">
+    <div class="ending-wrap">
+
+        <!-- scrapbook ending layout -->
+        <div class="ending-board">
+
+            <div class="ending-tag">Chapter IV</div>
+
+            <h1 class="ending-title" id="endingTitle"></h1>
+
+            <div class="ending-note">
+                <p id="endingText"></p>
+            </div>
+
+            <div class="ending-polaroids">
+                <div class="end-pol ep1">
+                    <img src="../assets/img/flower.jpg" alt="" onerror="this.style.opacity='0'">
+                    <span>fresh, beautiful ♡</span>
+                </div>
+                <div class="end-pol ep2">
+                    <img src="../assets/img/sunset.jpg" alt="" onerror="this.style.opacity='0'">
+                    <span>golden hour ♡</span>
+                </div>
+                <div class="end-pol ep3">
+                    <img src="../assets/img/cat.jpg" alt="" onerror="this.style.opacity='0'">
+                    <span>meow favorite ♡</span>
+                </div>
+            </div>
+
+            <p class="ending-footer">Setiap hal kecil yang kamu suka,<br>selalu berhasil membuatku tersenyum padamu.</p>
+
+            <button class="chapter-btn" id="nextChapter">Lanjut ke Chapter V →</button>
+
+        </div>
+
+        <!-- floating deco -->
+        <div class="ending-deco ed1">✿</div>
+        <div class="ending-deco ed2">❀</div>
+        <div class="ending-deco ed3">♪</div>
+
+    </div>
+</section>
+
+<!-- AUDIO -->
+<audio id="bgMusic" loop>
+    <source src="../assets/audio/ini-abadi.mp3" type="audio/mpeg">
+</audio>
+
+<script src="../assets/js/chapter4.js"></script>
+</body>
+</html>

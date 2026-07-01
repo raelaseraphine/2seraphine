@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <!-- ⬇️ Cek paling awal: kalau Hanami sudah pernah diselesaikan,
+         langsung lempar ke archive.html sebelum apapun sempat dirender. -->
+    <script>
+      (function () {
+        if (localStorage.getItem('hanami_completed') === 'true') {
+          window.location.replace('../end/archive.html');
+        }
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sebuah Surat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="bg-decoration" aria-hidden="true"></div>
+    <main class="hero">
+        <div class="intro" id="intro">
+            <span class="eyebrow reveal delay-1">Surat Tertutup</span>
+            <h1 class="reveal delay-2">
+                Ada sesuatu yang<br>
+                ingin <em>kusampaikan</em>.
+            </h1>
+            <p class="reveal delay-3">
+                Jika surat ini memang ditujukan untukmu,
+                silakan buka.
+            </p>
+            <button id="openBtn" class="seal-button reveal delay-4">
+                <span class="seal" aria-hidden="true">&amp;</span>
+                <span class="seal-label">Buka Surat</span>
+            </button>
+        </div>
+        <div class="letter hidden" id="letter">
+            <span class="seal seal--card" aria-hidden="true">&amp;</span>
+            <div class="letter-top">
+                Untuk seseorang yang spesial
+            </div>
+            <p class="description">
+                Sebelum membaca isi surat ini,
+                aku ingin memastikan surat ini sampai
+                kepada orang yang tepat.
+            </p>
+            <form id="loginForm">
+                <div class="field">
+                    <input type="text" id="name" placeholder=" " required>
+                    <label for="name">Nama Lengkap</label>
+                </div>
+                <div class="field">
+                    <input type="text" id="birth" placeholder=" " required>
+                    <label for="birth">Tanggal Lahir (DD-MM-YY)</label>
+                </div>
+                <button type="submit" class="seal-button">
+                    <span class="seal-label">Buka Suratku</span>
+                </button>
+            </form>
+            <p id="message"></p>
+        </div>
+    </main>
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
